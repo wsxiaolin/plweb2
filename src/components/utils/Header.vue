@@ -65,7 +65,7 @@ const toggleFullScreen = () => {
 <style scoped>
 .header-container {
   height: 50px;
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   padding: 0 3vw 0 3vw;
   font-size: small;

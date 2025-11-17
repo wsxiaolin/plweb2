@@ -2,11 +2,10 @@
 /*  The container of the start page and black hole, which contains a border and a bottom navigation bar height for margin. */
 .block-container {
   /* For Header */
-  height: calc(100dvh - 50px);
-  padding: 55px 20px 10px 20px;
+  height: calc(100dvh - 110px);
+  padding: 10px 20px 0px 10px;
   overflow-y: scroll;
   box-sizing: border-box;
   scrollbar-width: none;
-  /* For Footer */
   margin-bottom: 50px;
 }

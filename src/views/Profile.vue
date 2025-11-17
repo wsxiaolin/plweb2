@@ -299,7 +299,6 @@ function copyUser() {
 }
 .container {
   text-align: center;
-  /* 保证容器可伸展并允许内部滚动区域使用 min-height:0 */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -318,7 +317,7 @@ function copyUser() {
   width: 98%;
   margin: 5px;
   flex: 1 1 auto;
-  min-height: 0; /* 关键：允许子元素正确触发 overflow */
+  min-height: 0; 
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -328,7 +327,6 @@ function copyUser() {
   border-radius: 6px;
 }
 
-/* 让 n-tabs 和 tab-pane 在容器内也能伸展 */
 .container .n-tabs {
   flex: 1 1 auto;
   min-height: 0;
