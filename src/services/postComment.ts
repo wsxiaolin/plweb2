@@ -2,7 +2,6 @@ import { getData } from "./api/getData";
 import Emitter from "./eventEmitter";
 import type { Ref } from "vue";
 import i18n from "./i18n/i18n";
-import { useI18n } from "vue-i18n";
 
 // eslint-disable-next-line max-lines-per-function
 export default async function postComment(
@@ -13,7 +12,7 @@ export default async function postComment(
   replyID: Ref<string>,
   updateTrigger: Ref<number>,
 ) {
-  const { t } = useI18n();
+  const t = i18n.global.t;
   try {
     if (isLoading.value) return;
     isLoading.value = true;

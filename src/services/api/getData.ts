@@ -45,7 +45,7 @@ export async function getData(path: string, body: unknown) {
   }).then((response) => {
     if (!response.ok) {
       window.$ErrorLogger.writeLog(
-        `API请求失败: ${path}, 状态码: ${response.status}`,
+        `API请求失败: ${path}, 状态码: ${response.status}`
       );
       return response.json().then(() => {
         // 这里的错误处理仅处理API本身非2xx的错误，及服务器本身出了问题
@@ -61,7 +61,7 @@ export async function getData(path: string, body: unknown) {
           removeToken({
             res: data,
             info: userInfo,
-          }),
+          })
         );
       }
       const afterRes = afterRequest(data);
@@ -92,7 +92,7 @@ export async function getData(path: string, body: unknown) {
 export async function login(
   arg1: string | null,
   arg2: string | null,
-  is_token = false,
+  is_token = false
 ): Promise<{
   Status: number;
   Message: string;
@@ -135,14 +135,15 @@ export async function login(
       });
     }
     return response.json().then((data) => {
-      sm.setObj(
-        "userAuthInfo",
-        {
-          token: data.Token,
-          authCode: data.AuthCode,
-        },
-        30 * 24 * 60 * 60 * 1000,
-      );
+      if (data.Token != null && data.AuthCode != null)
+        sm.setObj(
+          "userAuthInfo",
+          {
+            token: data.Token,
+            authCode: data.AuthCode,
+          },
+          30 * 24 * 60 * 60 * 1000
+        );
       messageRef.destroy();
       return data;
     });
