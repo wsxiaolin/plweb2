@@ -1,6 +1,7 @@
 import i18n from "../services/i18n/i18n";
 import Emitter from "../services/eventEmitter";
 import storageManager from "../services/storage";
+import { showDialog } from "@popup/naiveui";
 
 export const settingsConfig = [
   {
@@ -17,7 +18,7 @@ export const settingsConfig = [
         ],
         callBack: (newValue: string) => {
           i18n.global.locale.value = newValue as "English" | "Chinese";
-          Emitter.emit("nWarning", {
+          showDialog("warning", {
             title: i18n.global.t("login.reLogin"),
             content: i18n.global.t("login.reLoginContent"),
             positiveText: i18n.global.t("login.confirm"),
@@ -52,12 +53,18 @@ export const settingsConfig = [
           if (newValue === "off") {
             localStorage.removeItem("error_logs");
           }
-          Emitter.emit("nWarning", {
+          showDialog("warning", {
             title: i18n.global.t("login.reLogin"),
             content: i18n.global.t("login.reLoginContent"),
             positiveText: i18n.global.t("login.confirm"),
             onPositiveClick: async () => {
-              Emitter.emit("loginRequired");
+              storageManager.remove("userInfo");
+              window.$Logger.logEvent({
+                category: "Account",
+                action: "Toggle-Error-Logger",
+                label: newValue,
+                timestamp: Date.now(),
+              });
             },
           });
         },

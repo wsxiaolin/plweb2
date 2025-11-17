@@ -1,6 +1,6 @@
-import Emitter from "./eventEmitter";
 import { ref } from "vue";
 import storageManager from "./storage";
+import { showNotification } from "@popup/naiveui";
 
 interface ErrorLog {
   timestamp: number;
@@ -71,7 +71,11 @@ class ErrorLogger {
       ...context,
     });
 
-    Emitter.emit("error", error.message, 0, error);
+    showNotification({
+      title: "Unkown Error Occurred",
+      content: error.message,
+      description: error.stack ? error.stack.slice(0, 100) : "",
+    });
   }
 
   exportToTxt(): void {

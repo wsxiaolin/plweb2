@@ -1,5 +1,6 @@
 import Emitter from "../services/eventEmitter";
 import i18n from ".";
+import { showMessage } from "@popup/naiveui";
 
 let tagConfig = [
   {
@@ -740,7 +741,9 @@ export default function (tag: string): string {
   if (tag.startsWith("C-")) return tag;
   const tagObj = tagConfig.find((t) => t.Identifier === tag);
   if (!tagObj) {
-    Emitter.emit("error", `Tag not found: ${tag}`, 3);
+    showMessage("error", i18n.global.t("errors.tagNotFound", { tag }), {
+      duration: 5000,
+    });
     return tag;
   }
   return (tagObj?.Subject as any)[i18n.global.locale.value] || "";

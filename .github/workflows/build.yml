@@ -1,4 +1,4 @@
-name: Deploy to gh-pages
+name: Run ts and eslint checks
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
       - name: Install Git
         run: sudo apt-get install git -y
 
-      - name: Switch to gh-pages branch
+      - name: Configure git user
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -38,6 +38,6 @@ jobs:
       - name: Eslint checks
         run: npm run eslint
 
-      - name: Build project
+      - name: Building test
         run: npm run build
 

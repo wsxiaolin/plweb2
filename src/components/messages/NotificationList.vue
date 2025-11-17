@@ -156,7 +156,7 @@ function fillInTemplate(data: string, message: PMessage) {
 // 处理加载事件
 // eslint-disable-next-line max-lines-per-function
 const handleLoad = async (noTemplates = true) => {
-  if (!storageManager.getObj("userInfo").value?.ID) return;
+  if (storageManager.getObj("userInfo").value?.Nickname == null) return;
   if (loading.value) return; // Lock
   if (noMore.value) return;
   loading.value = true;

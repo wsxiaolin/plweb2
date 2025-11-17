@@ -41,6 +41,8 @@ And most importantly, we sincerely thanks to the previous contributors: Arenfell
 ## TO do list
 
 If you want to start a contribution, here is some directions:
+- [ ] Complete the settings page(including i18n switch, export error log etc), the components in ./views/settings user.config.ts system.config.ts already have a prototype
+- [ ] Redesign the error log, the format now is terrible
 - [ ] Some errors in runtime may not be detected
 - [ ] Fix the style when the window is too large
 - [ ] Improve the responsive design, there are problems with font size and others now
