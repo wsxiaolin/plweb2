@@ -1,6 +1,10 @@
 # Physics-Lab-Web v2
 
-This project is the new version of [Physics-Lab-Web](https://plweb.turtlesim.com), a web application for [Physics Lab AR](https://turtlesim.com/products/physics-lab/index-cn.html) (Chen, J. & Zhao, L. (2017)). It only provides basic community support and **DOES NOT CONTAIN EXPERIMENT FUNCTIONS**.
+This project is the new version of [Physics-Lab-Web](https://plweb.turtlesim.com), a web application for [Physics Lab AR](https://turtlesim.com/products/physics-lab/index-cn.html) (Chen, J. & Zhao, L. (2017)). It only provides basic community support and DOES NOT CONTAIN EXPERIMENT-RELATED FUNCTIONS.
+
+This project is just migrated from the old repository, there are some small problems, such as: components not imported, paths not written correctly, etc.
+
+And most importantly, we sincerely thanks to the previous contributors: Arenfelle, sfls-huangzeyuan, and other warm-hearted people who help us fin many bugs in the physicslab's community.
 
 - technologies used: vue3, typescript, vite, [richtext render based on c++ wasm](https://github.com/GoodenoughPhysicsLab/pltxt2htm)
 - other development tools:
@@ -20,24 +24,25 @@ This project is the new version of [Physics-Lab-Web](https://plweb.turtlesim.com
 7. Run `npm run build` to perform TypeScript checks. **After finishing, delete the docs/ folder and commit.**
 
 ## Project structure
-- `public/`: static resources that will be copied directly to the dist/ folder during build
-- `src/`: source code
-- `src/assets/`: static resources that will be processed by vite during build (e.g. images referenced in code)
-- `src/components/`: Vue components
-- `src/styles/`: global styles (e.g. variables, mixins)
+- `public/`: **Add pictures and icons here**, DO NOT import them in code using relative paths.
+- `src/views`: Pages, each page corresponds to a route.
+- `src/components/popup`: Donnot inport these components in other components, use funtions from @services/pupup instead.These components are seperate from the root vue instance.
 
-## 中间层一览
+## **Notice**
+- If you add a new page, please remember to add the route in `src/router/index.ts`.
+- **Richtext render will be replaced by a wasm edition later**,do not add new features to the current one
+- DONNOT use localstorage or sessionstorage directly, use @storage/index instead.And you need to register the keys in it.
+- DONNOT use fetch directly, use @services/api/ instead.
+- *DONNOT derectly import static files with its path*, use `getPath` function from @services/utils instead.
+- We use eventEmitter for page communication, and you need to register events types in  @services/eventEmitter
+- We use i18n , so donnot use hardcoded strings in components
+- Some config can be configured in service/config
 
-- `getPath.ts`: 使用环境变量在开发环境和生产环境指向了不同的url window.$getPath("url")
-- `eventEmitter.ts`: 事件总线，用于页面间通信，传统的发布-订阅模式
-- `utils.ts`: 存储字符串、对象以至于数据库等操作都会走这里
-- `richTextParser`: 富文本解析器以后会使用wasm重构
-- `api/`: 把物实的请求结果转换为我们自己希望的数据结构，包含请求前后的特殊的拦截器
-- `storage.ts`：所有存储相关的都走这里
-- `eventLogger.ts`：日志系统
-- `errroLogger.ts`： debugger模式
-- `config/`： 保护用户设置界面配置（部分实现）和项目runtime配置（没实现）
-- `views/`: 页面
-- `router/`: 增加页面后需要在此把url映射到页面
+## TO do list
 
-
+If you want to start a contribution, here is some directions:
+- [ ] Some errors in runtime may not be detected
+- [ ] Fix the style when the window is too large
+- [ ] Finish the error handling when API fails(We seldom check it, Im to blame)
+- [ ] Better storage management(**Using indexDB**).Some requests can be cached, and when we need to fetch them again, we can use the cached version first, and fetch the real source in the same time, then update it(Vue has an incredible stratege to make accurate dom element update). 
+- [ ] Transpile the code to support older browsers, using plugins(assigned to @wsxiaolin)

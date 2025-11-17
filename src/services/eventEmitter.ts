@@ -1,12 +1,6 @@
 type Events =
   | "loginRequired"
-  | "loading"
-  | "warning"
-  | "error"
-  | "info"
-  | "success"
   | "updateTagConfig"
-  | "nWarning"
   | "updateUserConfig"
   | "userLogin";
 
