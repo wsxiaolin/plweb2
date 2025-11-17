@@ -13,7 +13,7 @@
             :key="block.Subject"
           >
             <div class="block" style="height: 100%">
-              <BlockAndActivity
+              <TopicBlock
                 v-if="
                   block.$type.startsWith('Quantum.Models.Contents.TopicBlock')
                 "
@@ -53,7 +53,7 @@
 import { useResponsive } from "../layout/useResponsive";
 import { ref, onMounted, onActivated } from "vue";
 import Header from "../components/utils/Header.vue";
-import BlockAndActivity from "../components/blocks/BlockAndActivity.vue";
+import TopicBlock from "../components/blocks/TopicBlock.vue";
 import Block from "../components/blocks/Block.vue";
 import Footer from "../components/utils/Footer.vue";
 import { getData } from "@services/api/getData.ts";

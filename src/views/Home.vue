@@ -45,7 +45,7 @@
             :key="block.Subject"
           >
             <div class="block">
-              <BlockAndActivity
+              <TopicBlock
                 v-if="
                   block.$type.startsWith('Quantum.Models.Contents.TopicBlock')
                 "
@@ -87,7 +87,7 @@ import{ login }from "@api/getData";
 import Header from "../components/utils/Header.vue";
 import Footer from "../components/utils/Footer.vue";
 import Block from "../components/blocks/Block.vue";
-import BlockAndActivity from "../components/blocks/BlockAndActivity.vue";
+import TopicBlock from "../components/blocks/TopicBlock.vue";
 import { showLoginModel } from "@popup/index";
 
 const isLoading = ref(true);

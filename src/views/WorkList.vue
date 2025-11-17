@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import Header from "../components/utils/Header.vue";
-import WorksList from "../components/projects/itemList.vue";
+import WorksList from "../components/projects/wortList.vue";
 import { useRoute } from "vue-router";
 import { decodeHrefToQueryObj } from "@services/utils";
 import { useResponsive } from "../layout/useResponsive";
