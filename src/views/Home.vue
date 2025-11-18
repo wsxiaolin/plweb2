@@ -151,6 +151,10 @@ Emitter.on("userLogin", (res) => {
   };
 });
 
+
+// It is astonishing that server respond with projects data when login with (null,null)
+// And responed with user data when login with token/password
+// Fourtunately, both data has the same structure
 async function loadPageData(response: any) {
   isLoading.value = false;
   Emitter.emit("updateTagConfig", response.Data.ContentTags);

@@ -169,7 +169,8 @@ import storageManager from "@storage/index.ts";
 
 const comment = ref("");
 const isLoading = ref(false);
-const upDate = ref(1); // 用于使用watch触发刷新 To trigger a refresh using watch
+const upDate = ref(1); 
+// 用于使用watch触发刷新 To trigger a refresh using watch
 const replyID = ref("");
 const selectedTab = ref("Intro");
 const route = useRoute();
