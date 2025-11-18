@@ -45,7 +45,7 @@ export async function getAvatarUrl(ID: string, useCache = true) {
       cache[ID] = [avatarIndex, Date.now()];
       storageManager.setObj("userIDAndAvatarIDMap", cache, 72 * 60 * 60 * 1000); // 72小时 72 hours
     } catch (error) {
-      console.error("获取头像失败", error);
+      console.error("Getting avatar error", error);
       return getPath("/@base/assets/user/default-avatar.png");
     }
   }

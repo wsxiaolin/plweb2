@@ -135,6 +135,7 @@ export async function login(
       return response.json().then(() => {
         showMessage("error", "无法与服务器通讯，请稍候再试", {
           duration: 5000,
+          // Replace with i18n later
         });
       });
     }

@@ -234,6 +234,7 @@ onMounted(async () => {
 
 function handleMsgClick(item: any) {
   replyID.value = item.userID;
+  // Replace it with i18n later
   comment.value = `回复@${item.msg_title}: `;
 }
 
@@ -373,6 +374,7 @@ onActivated(() => {
 </script>
 
 <style scoped>
+/* Be careful with inline CSS  */
 .return {
   width: 2.7em;
 }
