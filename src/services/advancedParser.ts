@@ -1,14 +1,19 @@
 import { ref, watch } from "vue";
 import { getWasmInstance } from "./pltxt2htm/wasmLoader";
+import { getDeallocator } from "./pltxt2htm/deallocator";
 
-let fixedadv_parser: ((text: string, host: string) => string) | null = null;
+let fixedadv_parser: ((text: string, host: string) => number) | null = null;
 
 async function FixedadvParser(text: string, host: string): Promise<string> {
+  const wasmInstance = await getWasmInstance();
   if (!fixedadv_parser) {
-    const wasmInstance = await getWasmInstance();
-    fixedadv_parser = wasmInstance.cwrap("fixedadv_parser", "string", ["string", "string"]);
+    fixedadv_parser = wasmInstance.cwrap("fixedadv_parser", "number", ["string", "string"]);
   }
-  return fixedadv_parser(text, host);
+  let deallocate = await getDeallocator();
+  let char8_t_const_ptr = fixedadv_parser(text, host);
+  let result = wasmInstance.UTF8ToString(char8_t_const_ptr);
+  deallocate(char8_t_const_ptr);
+  return result;
 }
 
 function parse(source: () => string) {
