@@ -1111,7 +1111,6 @@ async function createWasm() {
       ret = onDone(ret);
       return ret;
     };
-
   
     /**
      * @param {string=} returnType
@@ -1121,6 +1120,7 @@ async function createWasm() {
   var cwrap = (ident, returnType, argTypes, opts) => {
       return (...args) => ccall(ident, returnType, argTypes, args, opts);
     };
+
 // End JS library code
 
 // include: postlibrary.js
@@ -1171,8 +1171,8 @@ Module['FS_createPreloadedFile'] = FS.createPreloadedFile;
 }
 
 // Begin runtime exports
-  Module['ccall'] = ccall;
   Module['cwrap'] = cwrap;
+  Module['UTF8ToString'] = UTF8ToString;
   var missingLibrarySymbols = [
   'writeI53ToI64',
   'writeI53ToI64Clamped',
@@ -1394,6 +1394,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'noExitRuntime',
   'addOnPreRun',
   'addOnPostRun',
+  'ccall',
   'freeTableIndexes',
   'functionsInTableMap',
   'setValue',
@@ -1402,7 +1403,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'PATH_FS',
   'UTF8Decoder',
   'UTF8ArrayToString',
-  'UTF8ToString',
   'stringToUTF8Array',
   'stringToUTF8',
   'lengthBytesUTF8',
@@ -1594,6 +1594,7 @@ var _ver_patch = Module['_ver_patch'] = makeInvalidEarlyAccess('_ver_patch');
 var _advanced_parser = Module['_advanced_parser'] = makeInvalidEarlyAccess('_advanced_parser');
 var _fixedadv_parser = Module['_fixedadv_parser'] = makeInvalidEarlyAccess('_fixedadv_parser');
 var _common_parser = Module['_common_parser'] = makeInvalidEarlyAccess('_common_parser');
+var _deallocate = Module['_deallocate'] = makeInvalidEarlyAccess('_deallocate');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_get_end = makeInvalidEarlyAccess('_emscripten_stack_get_end');
@@ -1614,6 +1615,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['advanced_parser'] != 'undefined', 'missing Wasm export: advanced_parser');
   assert(typeof wasmExports['fixedadv_parser'] != 'undefined', 'missing Wasm export: fixedadv_parser');
   assert(typeof wasmExports['common_parser'] != 'undefined', 'missing Wasm export: common_parser');
+  assert(typeof wasmExports['deallocate'] != 'undefined', 'missing Wasm export: deallocate');
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
   assert(typeof wasmExports['emscripten_stack_get_end'] != 'undefined', 'missing Wasm export: emscripten_stack_get_end');
@@ -1631,6 +1633,7 @@ function assignWasmExports(wasmExports) {
   _advanced_parser = Module['_advanced_parser'] = createExportWrapper('advanced_parser', 2);
   _fixedadv_parser = Module['_fixedadv_parser'] = createExportWrapper('fixedadv_parser', 2);
   _common_parser = Module['_common_parser'] = createExportWrapper('common_parser', 1);
+  _deallocate = Module['_deallocate'] = createExportWrapper('deallocate', 1);
   _fflush = createExportWrapper('fflush', 1);
   _strerror = createExportWrapper('strerror', 1);
   _emscripten_stack_get_end = wasmExports['emscripten_stack_get_end'];
