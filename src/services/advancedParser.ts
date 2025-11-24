@@ -21,7 +21,7 @@ function parse(source: () => string) {
   watch(
     source,
     async (val) => {
-      html.value = val ? await FixedadvParser(val, `${window.location.host}/#`) : "";
+      html.value = val ? await FixedadvParser(val, import.meta.env.VITE_ROOT_URL) : "";
     },
     { immediate: true }
   );
