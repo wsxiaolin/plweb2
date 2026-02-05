@@ -22,7 +22,7 @@
       <div id="notification_message" class="notification_message">
         <div
           id="notification_text"
-          v-richText="() => parse(message.msg)"
+          v-richText="() => parse(message.msg, '', '', currentUserId, '', currentUserId, [])"
           class="notification_text"
         ></div>
       </div>
