@@ -1,6 +1,5 @@
 import Emitter from "../services/eventEmitter";
 import i18n from ".";
-import { showMessage } from "@popup/naiveui";
 
 let tagConfig = [
   {

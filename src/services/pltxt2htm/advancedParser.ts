@@ -2,7 +2,6 @@ import { getWasmInstance } from "./wasmLoader";
 import { getDeallocator } from "./deallocator";
 import hljs from "highlight.js";
 import dompurify from "dompurify";
-// @ts-expect-error No type info
 import renderMathInElement from "katex/contrib/auto-render/auto-render.js";
 import "katex/dist/katex.min.css";
 
@@ -48,9 +47,7 @@ async function parse(source: string, project: string = "", visitor_name: string 
       ],
       ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
       // 错误处理
-      errorCallback: (err: any, expr: string) => {
-        console.warn(`KaTeX 错误: ${err.message}`, expr);
-      }
+
     });
   }
   tempDiv.querySelectorAll("pre code").forEach((block) => {
