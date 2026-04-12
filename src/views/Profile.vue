@@ -324,8 +324,7 @@ onMounted(() => {
 
 function handleMsgClick(item: any) {
   replyID.value = item.userID;
-  comment.value = `回复@${item.msg_title}: `;
-  // Replace it with i18n later
+  comment.value = t("ui.messages.replyToUser", { user: item.msg_title });
 }
 
 async function handleEnter() {
@@ -374,10 +373,10 @@ function copy(text: string) {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      showMessage("info", "copied", { duration: 1000 });
+      showMessage("info", t("ui.messages.copySuccess"), { duration: 1000 });
     })
     .catch(() => {
-      showMessage("error", "failed to copy text", { duration: 2000 });
+      showMessage("error", t("ui.messages.copyFailed"), { duration: 2000 });
     });
 }
 

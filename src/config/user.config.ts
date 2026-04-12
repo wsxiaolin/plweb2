@@ -2,29 +2,46 @@ import i18n from "@i18n/index";
 import storageManager from "../services/storage";
 import { showDialog, showNotification } from "@popup/naiveui";
 
+type SupportedLocale = "English" | "Chinese" | "German" | "Japanese" | "French";
+
+function createLanguageOptions() {
+  return [
+    { label: i18n.global.t("settings.languageOptions.chinese"), value: "Chinese" },
+    { label: i18n.global.t("settings.languageOptions.english"), value: "English" },
+    { label: i18n.global.t("settings.languageOptions.german"), value: "German" },
+    { label: i18n.global.t("settings.languageOptions.japanese"), value: "Japanese" },
+    { label: i18n.global.t("settings.languageOptions.french"), value: "French" },
+  ];
+}
+
+function createDebuggerOptions() {
+  return [
+    { label: i18n.global.t("settings.debuggerOptions.on"), value: "on" },
+    { label: i18n.global.t("settings.debuggerOptions.off"), value: "off" },
+  ];
+}
+
 export const settingsConfig = [
   {
     title: "general",
     items: [
       {
         key: "language",
-        label: "界面语言",
+        label: i18n.global.t("settings.language"),
         type: "link",
         value: "Chinese",
-        options: [
-          { label: "简体中文", value: "Chinese" },
-          { label: "English", value: "English" },
-          { label: "Deutsch", value: "German" },
-          { label: "日本語", value: "Japanese" },
-          { label: "Français", value: "French" },
-        ],
+        options: createLanguageOptions(),
         callBack: (newValue: string) => {
-          i18n.global.locale.value = newValue as
-            | "English"
-            | "Chinese"
-            | "German"
-            | "Japanese"
-            | "French";
+          i18n.global.locale.value = newValue as SupportedLocale;
+          const generalItems = settingsConfig[0]?.items || [];
+          const languageItem = generalItems.find((item) => item.key === "language");
+          const debuggerItem = generalItems.find((item) => item.key === "debugger");
+          if (languageItem?.type === "link") {
+            languageItem.options = createLanguageOptions();
+          }
+          if (debuggerItem?.type === "link") {
+            debuggerItem.options = createDebuggerOptions();
+          }
           // Save language setting to localStorage
           const userConfig = storageManager.getObj("userConfig")?.value || {};
           userConfig.language = newValue;
@@ -51,13 +68,10 @@ export const settingsConfig = [
       },
       {
         key: "debugger",
-        label: "错误日志",
+        label: i18n.global.t("settings.debugger"),
         type: "link",
         value: "on",
-        options: [
-          { label: "on", value: "on" },
-          { label: "off", value: "off" },
-        ],
+        options: createDebuggerOptions(),
         callBack: (newValue: string) => {
           if (newValue === "off") {
             localStorage.removeItem("error_logs");
@@ -80,7 +94,7 @@ export const settingsConfig = [
       },
       {
         key: "exportLogs",
-        label: "导出错误日志",
+        label: i18n.global.t("settings.exportLogs"),
         type: "button",
         callBack: () => {
           window.$ErrorLogger.exportToTxt();

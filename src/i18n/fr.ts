@@ -121,6 +121,17 @@ export default {
     languageChangeTitle: "Langue modifiée",
     languageChangeContent:
       "Certaines fonctionnalités doivent être réactivées après la reconnexion pour appliquer la nouvelle langue complètement",
+    languageOptions: {
+      chinese: "简体中文",
+      english: "English",
+      german: "Deutsch",
+      japanese: "日本語",
+      french: "Français",
+    },
+    debuggerOptions: {
+      on: "Activé",
+      off: "Désactivé",
+    },
   },
   footer: {
     home: "Accueil",
@@ -130,10 +141,17 @@ export default {
   },
   ui: {
     messages: {
+      loading: "Chargement...",
       noMore: "Pas d'autres entrées",
       followSuccess: "Abonnement réussi",
       unfollowSuccess: "Désabonnement réussi",
       rateLimitExceeded: "Trop de demandes",
+      copySuccess: "Copié",
+      copyFailed: "Échec de la copie du texte",
+      uploadSuccess: "Couverture modifiée avec succès",
+      uploadFailed: "Échec du téléversement du fichier",
+      changeCoverFailed: "Échec du changement de couverture, veuillez réessayer plus tard",
+      replyToUser: "Répondre à @{user} : ",
     },
     labels: {
       my: "Mon",

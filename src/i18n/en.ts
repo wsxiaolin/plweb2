@@ -105,11 +105,11 @@ export default {
     dayBeforeYesterday: "The day before yesterday",
   },
   userCard: {
-    follow: "关注用户",
-    unFollow: "取消关注用户",
-    cantFollowYourself: "不能关注你自己",
-    following: "关注",
-    follower: "粉丝",
+    follow: "Follow user",
+    unFollow: "Unfollow user",
+    cantFollowYourself: "You cannot follow yourself",
+    following: "Following",
+    follower: "Followers",
   },
   settings: {
     language: "Language",
@@ -120,6 +120,17 @@ export default {
     languageChangeTitle: "Language Changed",
     languageChangeContent:
       "Some features need to re-login to apply the new language completely",
+    languageOptions: {
+      chinese: "简体中文",
+      english: "English",
+      german: "Deutsch",
+      japanese: "日本語",
+      french: "Français",
+    },
+    debuggerOptions: {
+      on: "On",
+      off: "Off",
+    },
   },
   footer: {
     home: "Home",
@@ -129,10 +140,17 @@ export default {
   },
   ui: {
     messages: {
+      loading: "Loading...",
       noMore: "No more",
       followSuccess: "Follow successful",
       unfollowSuccess: "Unfollow successful",
       rateLimitExceeded: "Too frequent requests",
+      copySuccess: "Copied",
+      copyFailed: "Failed to copy text",
+      uploadSuccess: "Cover changed successfully",
+      uploadFailed: "Failed to upload file",
+      changeCoverFailed: "Failed to change cover, please try again later",
+      replyToUser: "Reply @{user}: ",
     },
     labels: {
       my: "My",

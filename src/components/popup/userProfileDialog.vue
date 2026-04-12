@@ -69,8 +69,9 @@ const props = defineProps<{
   close: () => void;
 }>();
 
-const name = ref("loading...");
-const snt = ref("loading...");
+const { t } = useI18n();
+const name = ref(t("ui.messages.loading"));
+const snt = ref(t("ui.messages.loading"));
 const avatar = ref(getPath("/assets/user/default-avatar.png"));
 const followingCount = ref(0);
 const followerCount = ref(0);
@@ -78,7 +79,6 @@ const postCount = ref(0);
 const starCount = ref(0);
 const fragmentCount = ref(0);
 const isFollowing = ref(false);
-const { t } = useI18n();
 let ID = "";
 
 const jumpToUser = (id: any) => {

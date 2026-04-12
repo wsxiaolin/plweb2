@@ -117,6 +117,17 @@ export default {
     exportLogs: "导出错误日志",
     languageChangeTitle: "语言已切换",
     languageChangeContent: "部分功能需要重新登录才能完全应用新语言",
+    languageOptions: {
+      chinese: "简体中文",
+      english: "English",
+      german: "Deutsch",
+      japanese: "日本語",
+      french: "Français",
+    },
+    debuggerOptions: {
+      on: "开启",
+      off: "关闭",
+    },
   },
   footer: {
     home: "首页",
@@ -126,10 +137,17 @@ export default {
   },
   ui: {
     messages: {
+      loading: "加载中...",
       noMore: "没有更多了",
       followSuccess: "关注成功",
       unfollowSuccess: "取关成功",
       rateLimitExceeded: "频率过快",
+      copySuccess: "复制成功",
+      copyFailed: "复制失败",
+      uploadSuccess: "封面更换成功",
+      uploadFailed: "上传失败",
+      changeCoverFailed: "更换封面失败，请稍后再试",
+      replyToUser: "回复@{user}: ",
     },
     labels: {
       my: "我的",

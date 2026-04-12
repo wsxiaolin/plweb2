@@ -120,6 +120,17 @@ export default {
     languageChangeTitle: "言語が変更されました",
     languageChangeContent:
       "一部の機能は新しい言語を完全に適用するために再度ログインする必要があります",
+    languageOptions: {
+      chinese: "简体中文",
+      english: "English",
+      german: "Deutsch",
+      japanese: "日本語",
+      french: "Français",
+    },
+    debuggerOptions: {
+      on: "オン",
+      off: "オフ",
+    },
   },
   footer: {
     home: "ホーム",
@@ -129,10 +140,17 @@ export default {
   },
   ui: {
     messages: {
+      loading: "読み込み中...",
       noMore: "これ以上ありません",
       followSuccess: "フォローに成功しました",
       unfollowSuccess: "フォロー解除に成功しました",
       rateLimitExceeded: "リクエストが多すぎます",
+      copySuccess: "コピーしました",
+      copyFailed: "テキストのコピーに失敗しました",
+      uploadSuccess: "カバーの変更に成功しました",
+      uploadFailed: "ファイルのアップロードに失敗しました",
+      changeCoverFailed: "カバーの変更に失敗しました。しばらくしてから再試行してください",
+      replyToUser: "@{user} に返信: ",
     },
     labels: {
       my: "マイ",

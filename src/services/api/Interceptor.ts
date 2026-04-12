@@ -2,6 +2,7 @@ import type { MessageReactive } from "naive-ui";
 
 import storageManager from "@storage/index.ts";
 import { showMessage } from "@popup/naiveui.ts";
+import i18n from "@i18n/index.ts";
 
 let messageRef: MessageReactive;
 
@@ -146,7 +147,7 @@ export function beforeRequest(path: string): IIntercetporResponse {
   }
 
   if (!noMessagesPath.some((p) => path === p))
-    messageRef = showMessage("loading", "loading...", {
+    messageRef = showMessage("loading", i18n.global.t("ui.messages.loading"), {
       duration: 6000,
     });
   return { continue: true, data: null };

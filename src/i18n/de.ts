@@ -122,6 +122,17 @@ export default {
     languageChangeTitle: "Sprache geändert",
     languageChangeContent:
       "Einige Funktionen erfordern eine erneute Anmeldung, um die neue Sprache vollständig anzuwenden",
+    languageOptions: {
+      chinese: "简体中文",
+      english: "English",
+      german: "Deutsch",
+      japanese: "日本語",
+      french: "Français",
+    },
+    debuggerOptions: {
+      on: "Ein",
+      off: "Aus",
+    },
   },
   footer: {
     home: "Startseite",
@@ -131,10 +142,17 @@ export default {
   },
   ui: {
     messages: {
+      loading: "Wird geladen...",
       noMore: "Keine weiteren Einträge",
       followSuccess: "Erfolgreich gefolgt",
       unfollowSuccess: "Erfolgreich entfolgt",
       rateLimitExceeded: "Zu viele Anfragen",
+      copySuccess: "Kopiert",
+      copyFailed: "Text konnte nicht kopiert werden",
+      uploadSuccess: "Cover erfolgreich geändert",
+      uploadFailed: "Datei-Upload fehlgeschlagen",
+      changeCoverFailed: "Cover konnte nicht geändert werden, bitte später erneut versuchen",
+      replyToUser: "Antwort an @{user}: ",
     },
     labels: {
       my: "Mein",

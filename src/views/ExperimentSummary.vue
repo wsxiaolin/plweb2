@@ -281,8 +281,7 @@ onMounted(() => {
 
 function handleMsgClick(item: any) {
   replyID.value = item.userID;
-  // Replace it with i18n later
-  comment.value = `回复@${item.msg_title}: `;
+  comment.value = t("ui.messages.replyToUser", { user: item.msg_title });
 }
 
 async function handleEnter() {
@@ -304,10 +303,10 @@ function copy(text: string) {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      showMessage("info", "copied", { duration: 1000 });
+      showMessage("info", t("ui.messages.copySuccess"), { duration: 1000 });
     })
     .catch(() => {
-      showMessage("error", "failed to copy text", { duration: 2000 });
+      showMessage("error", t("ui.messages.copyFailed"), { duration: 2000 });
     });
 }
 // eslint-disable-next-line max-lines-per-function
@@ -526,10 +525,12 @@ function copySubject() {
                 return;
               }
             } catch (_upErr) {
-              showMessage("error", "Failed to upload file", { duration: 2000 });
+              showMessage("error", t("ui.messages.uploadFailed"), {
+                duration: 2000,
+              });
               return;
             }
-            showMessage("success", "Cover changed successfully", {
+            showMessage("success", t("ui.messages.uploadSuccess"), {
               duration: 2000,
             });
             // refresh current cover (using existing utility function)
@@ -576,14 +577,14 @@ function copySubject() {
           } catch (_err) {
             showMessage(
               "error",
-              "Failed to change cover, please try again later",
+              t("ui.messages.changeCoverFailed"),
               { duration: 2000 },
             );
           }
         };
         input.click();
       } catch (_error) {
-        showMessage("error", "Unknown error, please try again later", {
+        showMessage("error", t("errors.unknownError"), {
           duration: 2000,
         });
       }
