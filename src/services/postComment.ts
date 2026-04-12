@@ -1,4 +1,5 @@
 import { getData } from "./api/getData";
+import { isRateLimitResponse } from "./api/Interceptor";
 import type { Ref } from "vue";
 import i18n from "@i18n/index";
 import { showMessage } from "@popup/naiveui";
@@ -46,9 +47,13 @@ export default async function postComment(
         blockedMessage,
       );
       showMessage("error", errorMsg, { duration: 5000 });
+    } else if (isRateLimitResponse(response)) {
+      showMessage("error", t("ui.messages.rateLimitExceeded"), {
+        duration: 4000,
+      });
     }
   } catch (e) {
-    if (!(e === "频率过快")) console.error(e);
+    console.error(e);
   } finally {
     isLoading.value = false;
   }

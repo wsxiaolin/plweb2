@@ -12,60 +12,139 @@ interface IIntercetporResponse {
   data: Result | null;
 }
 
+const RATE_LIMIT_STATUS = 429;
+const RATE_LIMIT_MESSAGE = "Server.Offline";
+
 const noMessagesPath = ["/Users/GetUser"];
 const noDestroyPath = ["Quantum.Models.Packages.UserPackage, Quantum Models"];
 
+type RequestHistoryPayload = {
+  userId: string;
+  records: Record<string, number[]>;
+};
+
+function getUserId(): string {
+  const userInfo = storageManager.getObj("userInfo").value;
+  const userAuthInfo = storageManager.getObj("userAuthInfo").value;
+  return (
+    userInfo?.ID ||
+    userInfo?.id ||
+    userAuthInfo?.userId ||
+    userAuthInfo?.userID ||
+    userAuthInfo?.ID ||
+    "anonymous"
+  );
+}
+
+function normalizeHistoryPayload(raw: unknown): RequestHistoryPayload {
+  if (
+    raw &&
+    typeof raw === "object" &&
+    "records" in raw &&
+    (raw as RequestHistoryPayload).records
+  ) {
+    const payload = raw as RequestHistoryPayload;
+    return {
+      userId: payload.userId || "anonymous",
+      records: payload.records,
+    };
+  }
+
+  return {
+    userId: "anonymous",
+    records: (raw as Record<string, number[]>) || {},
+  };
+}
+
 const initialHistoryResult = storageManager.getObj("requestHistoryMap");
-const initialHistory =
+const initialPayload =
   initialHistoryResult.status === "success" && initialHistoryResult.value
-    ? initialHistoryResult.value
-    : {};
+    ? normalizeHistoryPayload(initialHistoryResult.value)
+    : { userId: getUserId(), records: {} };
+let activeUserId = initialPayload.userId;
 const requestHistoryMap = new Map<string, number[]>(
-  Object.entries(initialHistory),
+  Object.entries(initialPayload.records),
 );
 
-function rateLimit(path: string): boolean {
-  const history = requestHistoryMap.get(path) || [];
-  if (history.length === 0) return false;
+function persistHistory() {
+  storageManager.setObj(
+    "requestHistoryMap",
+    {
+      userId: activeUserId,
+      records: Object.fromEntries(requestHistoryMap),
+    },
+    2 * 24 * 60 * 60 * 1000,
+  );
+}
 
-  if (!requestHistoryMap.has(path)) {
-    requestHistoryMap.set(path, [Date.now()]);
+function syncUserHistory(userId: string) {
+  if (activeUserId === userId) return;
+  activeUserId = userId;
+  requestHistoryMap.clear();
+  persistHistory();
+}
+
+function rateLimit(path: string, userId: string): boolean {
+  if (path !== "/Messages/PostComment") return false;
+
+  syncUserHistory(userId);
+  const historyKey = `${userId}:${path}`;
+  const history = requestHistoryMap.get(historyKey) || [];
+  if (history.length === 0) {
+    requestHistoryMap.set(historyKey, [Date.now()]);
+    persistHistory();
     return false;
   }
 
   if (history.length > 10) {
-    requestHistoryMap.set(path, history.slice(1));
+    requestHistoryMap.set(historyKey, history.slice(1));
   }
 
-  switch (path) {
-    case "/Messages/PostComment": {
-      const list = history;
-      let n = 0;
-      for (let i = list.length - 1; i >= 0; i--) {
-        n++;
-        const ts = list[i];
-        if (ts !== undefined && Math.sqrt(Date.now() / 1000 - ts / 1000) < n) {
-          return true;
-        }
-      }
+  const list = history;
+  let n = 0;
+  for (let i = list.length - 1; i >= 0; i--) {
+    n++;
+    const ts = list[i];
+    if (ts !== undefined && Math.sqrt(Date.now() / 1000 - ts / 1000) < n) {
+      return true;
     }
   }
-  requestHistoryMap.set(path, [...history, Date.now()]);
-  storageManager.setObj(
-    "requestHistoryMap",
-    Object.fromEntries(requestHistoryMap),
-    2 * 24 * 60 * 60 * 1000,
-  );
+
+  requestHistoryMap.set(historyKey, [...history, Date.now()]);
+  persistHistory();
   return false;
 }
 
+function rateLimitResponse(): Result {
+  return {
+    Status: RATE_LIMIT_STATUS,
+    Message: RATE_LIMIT_MESSAGE,
+    Data: {
+      i18nKey: "ui.messages.rateLimitExceeded",
+    },
+  };
+}
+
+export function isRateLimitResponse(response: unknown): boolean {
+  const data = (response as Result)?.Data as { i18nKey?: string } | null;
+  return (
+    !!response &&
+    typeof response === "object" &&
+    (response as Result).Status === RATE_LIMIT_STATUS &&
+    (response as Result).Message === RATE_LIMIT_MESSAGE &&
+    data?.i18nKey === "ui.messages.rateLimitExceeded"
+  );
+}
+
 export function beforeRequest(path: string): IIntercetporResponse {
-  if (rateLimit(path)) {
+  const userId = getUserId();
+  if (rateLimit(path, userId)) {
     return {
       continue: false,
-      data: { Status: -1001, Message: "Server.Offline", Data: null },
+      data: rateLimitResponse(),
     };
   }
+
   if (!noMessagesPath.some((p) => path === p))
     messageRef = showMessage("loading", "loading...", {
       duration: 6000,

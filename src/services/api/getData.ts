@@ -1,4 +1,4 @@
-import { afterRequest } from "./Interceptor.ts";
+import { afterRequest, beforeRequest } from "./Interceptor.ts";
 import sm from "@storage/index.ts";
 import i18n from "@i18n/index.ts";
 import { detectBrowserLanguage, toApiLanguage } from "@i18n/index.ts";
@@ -29,6 +29,11 @@ export function getData<Path extends ApiPath>(
 export function getData(path: string, body?: unknown): Promise<any>;
 export function getData(path: string, body?: unknown): Promise<any> {
   const npath = normalizePath(String(path));
+  const beforeRes = beforeRequest(npath);
+  if (beforeRes.continue === false) {
+    return Promise.resolve(beforeRes.data);
+  }
+
   const userInfo = sm.getObj("userAuthInfo");
   const token = userInfo.value?.token;
   const authCode = userInfo.value?.authCode;
