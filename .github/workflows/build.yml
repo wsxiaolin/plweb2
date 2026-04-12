@@ -27,13 +27,19 @@ jobs:
       - name: Install Git
         run: sudo apt-get install git -y
 
+      - name: Install build essentials (Linux)
+        run: sudo apt-get install -y build-essential python3
+
       - name: Configure git user
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Eslint checks
         run: npm run eslint
