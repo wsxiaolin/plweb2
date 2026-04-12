@@ -28,6 +28,7 @@ export const settingsConfig = [
           // Save language setting to localStorage
           const userConfig = storageManager.getObj("userConfig")?.value || {};
           userConfig.language = newValue;
+          userConfig.languageManuallySelected = true;
           storageManager.setObj("userConfig", userConfig);
           window.$Logger.logEvent({
             category: "Account",

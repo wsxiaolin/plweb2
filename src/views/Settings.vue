@@ -92,7 +92,8 @@ if (savedValues.language) {
 }
 
 function saveSettings() {
-  const saveData: Record<string, any> = {};
+  const currentConfig = storageManager.getObj("userConfig")?.value || {};
+  const saveData: Record<string, any> = { ...currentConfig };
   settingsConfig.forEach((section) => {
     section.items.forEach((item) => {
       if (item.type !== "button") {

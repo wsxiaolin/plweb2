@@ -6,6 +6,86 @@ import fr from "./fr";
 import { createI18n } from "vue-i18n";
 import storageManager from "@storage/index";
 
+export type AppLanguage =
+  | "Chinese"
+  | "English"
+  | "German"
+  | "Japanese"
+  | "French";
+
+const LANGUAGE_BY_CODE: Record<string, AppLanguage> = {
+  zh: "Chinese",
+  en: "English",
+  de: "German",
+  ja: "Japanese",
+  fr: "French",
+};
+
+const API_LANGUAGE_BY_APP_LANGUAGE: Record<AppLanguage, string> = {
+  Chinese: "zh-CN",
+  English: "en-US",
+  German: "de-DE",
+  Japanese: "ja-JP",
+  French: "fr-FR",
+};
+
+function normalizeLanguageTag(rawLanguage: string): string {
+  return rawLanguage.trim().replace(/_/g, "-").toLowerCase();
+}
+
+export function normalizeToAppLanguage(
+  rawLanguage?: string | null,
+): AppLanguage | null {
+  if (!rawLanguage) {
+    return null;
+  }
+
+  const normalized = normalizeLanguageTag(rawLanguage);
+
+  const exactLanguageMap: Record<string, AppLanguage> = {
+    chinese: "Chinese",
+    english: "English",
+    german: "German",
+    japanese: "Japanese",
+    french: "French",
+    "zh-cn": "Chinese",
+    "zh-hans": "Chinese",
+    "en-us": "English",
+    "de-de": "German",
+    "ja-jp": "Japanese",
+    "fr-fr": "French",
+  };
+
+  if (exactLanguageMap[normalized]) {
+    return exactLanguageMap[normalized];
+  }
+
+  const [baseCode] = normalized.split("-");
+  if (!baseCode) {
+    return null;
+  }
+  return LANGUAGE_BY_CODE[baseCode] ?? null;
+}
+
+export function detectBrowserLanguage(
+  browserLanguages: readonly string[] = navigator.languages,
+  browserLanguage: string = navigator.language,
+): AppLanguage {
+  for (const languageTag of browserLanguages) {
+    const matched = normalizeToAppLanguage(languageTag);
+    if (matched) {
+      return matched;
+    }
+  }
+
+  return normalizeToAppLanguage(browserLanguage) ?? "English";
+}
+
+export function toApiLanguage(language: AppLanguage | string): string {
+  const appLanguage = normalizeToAppLanguage(language) ?? "English";
+  return API_LANGUAGE_BY_APP_LANGUAGE[appLanguage];
+}
+
 const datetimeFormats = {
   Chinese: {
     time: {
@@ -152,11 +232,9 @@ const messages = {
   French: fr,
 };
 
-// Read from user config
 const config = storageManager.getObj("userConfig");
-const _l = config.value?.language || navigator.language;
 const defaultLanguage =
-  _l === "zh-CN" ? "Chinese" : _l === "zh" ? "Chinese" : "English";
+  normalizeToAppLanguage(config.value?.language) ?? detectBrowserLanguage();
 
 const i18n = createI18n({
   legacy: false,

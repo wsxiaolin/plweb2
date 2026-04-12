@@ -1,6 +1,7 @@
 import { afterRequest } from "./Interceptor.ts";
 import sm from "@storage/index.ts";
 import i18n from "@i18n/index.ts";
+import { detectBrowserLanguage, toApiLanguage } from "@i18n/index.ts";
 import { getDeviceInfo, getVisitorId } from "./getDevice.ts";
 import { showMessage } from "@popup/naiveui.ts";
 import { getPath } from "../utils.ts";
@@ -131,7 +132,7 @@ export async function login(
   // If the server respones with status 500, please check everything about these params
   let Device = {
     Identifier: await getVisitorId(),
-    Language: i18n.global.locale.value,
+    Language: toApiLanguage(i18n.global.locale.value),
   };
   if (is_token && arg1 && arg2) {
     // @ts-expect-error 暂无类型信息 There is no type information
@@ -170,6 +171,20 @@ export async function login(
           },
           30 * 24 * 60 * 60 * 1000,
         );
+      }
+
+      const userConfig = sm.getObj("userConfig").value || {};
+      const languageManuallySelected = Boolean(
+        userConfig.languageManuallySelected,
+      );
+      if (!languageManuallySelected) {
+        const detectedLanguage = detectBrowserLanguage();
+        i18n.global.locale.value = detectedLanguage;
+        sm.setObj("userConfig", {
+          ...userConfig,
+          language: detectedLanguage,
+          languageManuallySelected: false,
+        });
       }
       messageRef.destroy();
       return data;
