@@ -70,7 +70,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory("/Physics-Lab-Web/"),
+  history: createWebHashHistory("/plweb2/"),
   routes,
 });
 

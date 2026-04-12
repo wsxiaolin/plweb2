@@ -1,6 +1,6 @@
-# Physics-Lab-Web v2
+# plweb2 v2
 
-本项目是 [Physics-Lab-Web](https://plweb.turtlesim.com) 的新版本，该 web 应用来自 [Physics Lab AR](https://turtlesim.com/products/physics-lab/index-cn.html) (陈健 & 赵亮, 2017)。它仅提供基础的社区支持，并**不包含实验相关功能**。
+本项目是 [plweb2](https://plweb.turtlesim.com) 的新版本，该 web 应用来自 [Physics Lab AR](https://turtlesim.com/products/physics-lab/index-cn.html) (陈健 & 赵亮, 2017)。它仅提供基础的社区支持，并**不包含实验相关功能**。
 
 本项目只是从旧仓库迁移过来的，存在一些小问题，例如：组件未导入、路径写错等。
 

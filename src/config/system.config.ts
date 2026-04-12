@@ -16,7 +16,7 @@ const sysConfig = {
     },
   ],
   links: {
-    github: "https://github.com/NetLogo-Mobile/Physics-Lab-Web",
+    github: "https://github.com/NetLogo-Mobile/plweb2",
     forum: "https://pl.turtlesim.com",
   },
   allowedOrigin: [

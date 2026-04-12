@@ -1,6 +1,6 @@
-# Physics-Lab-Web v2
+# plweb2 v2
 
-This project is the new version of [Physics-Lab-Web](https://plweb.turtlesim.com), a web application for [Physics Lab AR](https://turtlesim.com/products/physics-lab/index-cn.html) (Chen, J. & Zhao, L. (2017)). It only provides basic community support and DOES NOT CONTAIN EXPERIMENT-RELATED FUNCTIONS.
+This project is the new version of [plweb2](https://plweb.turtlesim.com), a web application for [Physics Lab AR](https://turtlesim.com/products/physics-lab/index-cn.html) (Chen, J. & Zhao, L. (2017)). It only provides basic community support and DOES NOT CONTAIN EXPERIMENT-RELATED FUNCTIONS.
 
 This project is just migrated from the old repository, there are some small problems, such as: components not imported, paths not written correctly, etc.
 

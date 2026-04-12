@@ -14,7 +14,7 @@ export default defineConfig({
       },
 
       manifest: {
-        name: "Physics-Lab-Web",
+        name: "plweb2",
         short_name: "plweb",
         description: "Physics Lab Web - Online community",
         theme_color: "#3397e9ff",

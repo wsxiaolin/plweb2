@@ -74,7 +74,7 @@ const goToDevelopment = () => {
   window.$Logger.logEvent({
     category: "Activity",
     action: "Visit-External",
-    label: "https://github.com/NetLogo-Mobile/Physics-Lab-Web",
+    label: "https://github.com/NetLogo-Mobile/plweb2",
     timestamp: Date.now(),
   });
   window.open(getPath("/@root/about"));

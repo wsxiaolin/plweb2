@@ -45,7 +45,7 @@ export function getPath(path: string): string {
     .replace(/\/@base/g, baseUrl)
     .replace(/\/@root/g, rootUrl);
   if (window.location.host.includes("turtlesim")) {
-    return a.replace("/Physics-Lab-Web/", "");
+    return a.replace("/plweb2/", "");
   }
   return a;
 }

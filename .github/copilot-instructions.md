@@ -2,7 +2,7 @@
 
 - **技术栈 & 入口**: Vue 3 + TypeScript + Vite。应用入口：`src/main.ts`（挂载 `router`、`i18n`，并在 `window` 上注入 `window.$ErrorLogger` / `window.$Logger`）。
 
-- **路由**: 位于 `src/router/index.ts`，使用 Hash 历史（createWebHashHistory）并且绑定了 base `/Physics-Lab-Web/`。懒加载路由组件常见。
+- **路由**: 位于 `src/router/index.ts`，使用 Hash 历史（createWebHashHistory）并且绑定了 base `/plweb2/`。懒加载路由组件常见。
 
 - **服务层约定（重要）**: 所有后端请求通过 `src/services/api/getData.ts` 发出。
   - 请求为 POST 到 `getPath('/@api' + normalizedPath)`，会自动附带 `x-API-Token` 和 `x-API-AuthCode`（来源于本地存储 `userAuthInfo`）。
