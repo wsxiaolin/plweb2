@@ -15,25 +15,27 @@
       />
     </div>
   </Header>
-  <div class="list">
-    <MessagesList
-      :Category="route.params.category as 'Discussion' | 'Experiment' | 'User'"
-      :ID="route.params.id as string"
-      :upDate="upDate"
-      @msgClick="handleMsgClick"
-    ></MessagesList>
-  </div>
-  <div class="sendComment">
-    <n-input
-      v-model:value="comment"
-      style="text-align: left"
-      type="text"
-      :placeholder="t('comments.placeholder')"
-      show-count
-      :maxlength="300"
-      :loading="isLoading"
-      @keyup.enter="handleEnter"
-    />
+  <div class="content">
+    <div class="list">
+      <MessagesList
+        :Category="route.params.category as 'Discussion' | 'Experiment' | 'User'"
+        :ID="route.params.id as string"
+        :upDate="upDate"
+        @msgClick="handleMsgClick"
+      ></MessagesList>
+    </div>
+    <div class="sendComment">
+      <n-input
+        v-model:value="comment"
+        style="text-align: left"
+        type="text"
+        :placeholder="t('comments.placeholder')"
+        show-count
+        :maxlength="300"
+        :loading="isLoading"
+        @keyup.enter="handleEnter"
+      />
+    </div>
   </div>
 </template>
 
@@ -104,15 +106,22 @@ const handleEnter = async () => {
   z-index: 0;
 }
 
+.content {
+  height: calc(100dvh - 50px);
+  display: flex;
+  flex-direction: column;
+}
+
 .list {
   padding-left: 5px;
-  padding-top: 60px;
-  height: calc(100dvh - 50px);
+  flex: 1;
+  min-height: 0;
 }
 
 .sendComment {
   width: 97%;
-  margin: 0 auto;
+  margin: 7px auto;
+  flex-shrink: 0;
 }
 
 @media (min-aspect-ratio: 1/1) {
