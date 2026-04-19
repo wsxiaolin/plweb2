@@ -85,6 +85,9 @@ function deleteMsg() {
   flex-direction: row;
   gap: 10px;
   background: white;
+    /* white-space: nowrap; */
+  overflow: hidden;
+  word-break: break-all;
 }
 
 #notification_container:hover {
@@ -170,5 +173,10 @@ function deleteMsg() {
 
 div {
   box-sizing: border-box;
+}
+
+#notification_message :deep(img) {
+  max-width: 90%;
+  height: auto;
 }
 </style>
