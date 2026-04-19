@@ -85,8 +85,9 @@ function showComment() {
           ? "Experiment"
           : "User"
       }/${
+      props.notification.Fields?.ExperimentID ||
         props.notification.Fields?.DiscussionID ||
-        props.notification.TargetID
+        props.notification.Fields?.UserID
       }/${
         props.notification.Fields?.Discussion ||
         props.notification.Fields?.Experiment ||
