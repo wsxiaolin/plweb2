@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import MessagesList from "../components/messages/MessageList.vue";
 import { useRoute } from "vue-router";
 import Header from "../components/utils/Header.vue";
@@ -52,10 +52,16 @@ const route = useRoute();
 let isLoading = ref(false);
 let replyID = ref("");
 let upDate = ref(0);
-let title = ref(
-  `${parse(route.params.name as string)} 的 ${route.params.category === "User" ? t("comments.home") : t("comments.area")}`,
-);
+const title = ref("");
 let comment = ref(""); // 输入的内容 Input content
+
+
+onMounted(async () => {
+  const parsedName = await parse(route.params.name as string);
+  title.value = `${parsedName} 的 ${
+    route.params.category === "User" ? t("comments.home") : t("comments.area")
+  }`;
+});
 
 const goBack = () => {
   window.history.back();

@@ -110,12 +110,12 @@
                         Array.isArray(data.Description)
                           ? data.Description.join('\n')
                           : data.Description,
-                        data.Subject,
-                        storageManager.getObj('userInfo').value.Nickname,
-                        storageManager.getObj('userInfo').value.ID,
-                        data.User.Nickname,
-                        data.User.ID,
-                        data.Coauthors,
+                        {
+                          project: data.Subject,
+                          visitorId: storageManager.getObj('userInfo').value.ID,
+                          authorId: data.User.ID,
+                          coauthorIds: data.Coauthors,
+                        },
                       )
                   "
                   class="intro"
@@ -637,6 +637,11 @@ onActivated(() => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
+}
+
+.intro :deep(img) {
+  max-width: 100%;
+  height: auto;
 }
 
 .context .n-tabs {

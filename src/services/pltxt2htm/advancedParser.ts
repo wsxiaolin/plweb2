@@ -1,42 +1,69 @@
 import { getWasmInstance } from "./wasmLoader";
 import { getDeallocator } from "./deallocator";
 import hljs from "highlight.js";
-import dompurify from "dompurify";
 import renderMathInElement from "katex/contrib/auto-render/auto-render.js";
 import "katex/dist/katex.min.css";
 
-async function advancedParser(text: string, host: string, project: string, visitor: string,
-    author : string, coauthors: string): Promise<string> {
+interface ParseContext {
+  host?: string;
+  project?: string;
+  visitorId?: string;
+  authorId?: string;
+  coauthorIds?: string[];
+}
+
+async function advancedParser(
+  text: string,
+  host: string,
+  project: string,
+  visitor: string,
+  author: string,
+  coauthors: string,
+): Promise<string> {
   const wasmInstance = await getWasmInstance();
   const instanceAny: any = wasmInstance;
   if (!instanceAny.__advanced_parser_fn) {
-    instanceAny.__advanced_parser_fn = wasmInstance.cwrap(
-      "fixedadv_parser",
-      "number",
-      ["string", "string", "string", "string", "string", "string"]
-    );
+    instanceAny.__advanced_parser_fn = wasmInstance.cwrap("fixedadv_parser", "number", [
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+      "string",
+    ]);
   }
-  let deallocate = await getDeallocator();
-  let char8_t_const_ptr = (
-    instanceAny.__advanced_parser_fn as (_1: string, _2: string, _3: string, _4: string, _5: string, _6: string) => number
-  )(text, host,
-    project, visitor, author, coauthors
-  );
-  let result = wasmInstance.UTF8ToString(char8_t_const_ptr);
+
+  const deallocate = await getDeallocator();
+  const char8_t_const_ptr = (
+    instanceAny.__advanced_parser_fn as (
+      _1: string,
+      _2: string,
+      _3: string,
+      _4: string,
+      _5: string,
+      _6: string,
+    ) => number
+  )(text, host, project, visitor, author, coauthors);
+  const result = wasmInstance.UTF8ToString(char8_t_const_ptr);
   deallocate(char8_t_const_ptr);
   return result;
 }
 
-async function parse(source: string, project: string = "", visitor_name: string = "", visitor_id: string = "", author_name: string = "", author_id: string = "", coauthors: string[] = []) {
-  console.log(source);
-  // TODO i18n support for 'None'
-  const rawHtml = await advancedParser(source, import.meta.env.VITE_ROOT_URL, project, `<span class='RUser' data-user='${visitor_id}'>${dompurify.sanitize(visitor_name)}</span>`,
-     `<span class='RUser' data-user='${author_id}'>${dompurify.sanitize(author_name)}</span>`, coauthors?.length ? coauthors.join(",") : "None");
-  console.log(rawHtml);
+async function parse(source: string, context: ParseContext = {}) {
+  if (!source) return "";
+  const rawHtml = await advancedParser(
+    source,
+    context.host ?? import.meta.env.VITE_ROOT_URL ?? "",
+    context.project ?? "",
+    context.visitorId ?? "",
+    context.authorId ?? "",
+    context.coauthorIds?.filter(Boolean).join(",") || "None",
+  );
+
   if (!rawHtml) return "";
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = rawHtml;
-  // 渲染数学公式
+
   if (typeof renderMathInElement === "function") {
     renderMathInElement(tempDiv, {
       delimiters: [
@@ -46,18 +73,14 @@ async function parse(source: string, project: string = "", visitor_name: string 
         { left: "\\[", right: "\\]", display: true },
       ],
       ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
-      // 错误处理
-
     });
   }
+
   tempDiv.querySelectorAll("pre code").forEach((block) => {
     hljs.highlightElement(block as HTMLElement);
   });
-  return dompurify.sanitize(tempDiv.innerHTML, {
-    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'span', 'div', 'img', 'pre', 'code', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'user', 'discussion', 'experiment'],
-    ALLOWED_ATTR: ['src', 'alt', 'width', 'height', 'class', 'data-user', 'href', 'title', 'internal'],
-    ALLOW_DATA_ATTR: false,
-  });
+
+  return tempDiv.innerHTML;
 }
 
 export default parse;
