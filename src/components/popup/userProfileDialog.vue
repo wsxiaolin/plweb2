@@ -165,9 +165,10 @@ async function unfollowUser() {
   position: absolute;
   left: 0;
   top: 0;
-  height: 100dvh;
+  height: var(--app-height);
   width: 100%;
   background-color: rgba(0, 0, 0, 0.2);
+  padding: 12px;
 }
 
 .user {
@@ -175,10 +176,12 @@ async function unfollowUser() {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  padding: 20px;
+  width: min(320px, calc(100vw - 24px));
+  max-height: calc(var(--app-height) - 24px);
+  overflow: auto;
+  padding: clamp(16px, 4vw, 20px);
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 14px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -189,8 +192,8 @@ async function unfollowUser() {
 }
 
 .avatar {
-  width: 90px;
-  height: 90px;
+  width: clamp(72px, 20vw, 90px);
+  height: clamp(72px, 20vw, 90px);
   border-radius: 50%;
   margin: 5px;
 }

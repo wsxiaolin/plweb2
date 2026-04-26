@@ -88,16 +88,16 @@ function onCancel() {
 }
 .dialog {
   position: relative;
-  min-width: 300px;
-  max-width: 88%;
+  width: min(420px, calc(100vw - 24px));
+  max-width: 100%;
   background: #fff;
-  padding: 18px 12px 0 12px;
-  border-radius: 10px;
+  padding: 18px 12px 0;
+  border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   text-align: center;
 }
 .title {
-  font-size: 22px;
+  font-size: clamp(18px, 5vw, 22px);
   font-weight: 600;
   color: #222;
   margin: 6px 0 8px 0;
@@ -123,7 +123,7 @@ function onCancel() {
   border: none;
   background: transparent;
   color: #0b6fff;
-  font-size: 17px;
+  font-size: clamp(15px, 4vw, 17px);
 }
 .btn.cancel {
   border-right: 1px solid #eee;

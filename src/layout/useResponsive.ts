@@ -1,90 +1,94 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 const breakpoints = {
   mobile: 0,
-  tablet: 500,
-  laptop: 1000,
+  phone: 360,
+  tablet: 640,
+  laptop: 960,
   desktop: 1400,
   wide: 1800,
 };
 
+function getViewportHeight() {
+  return Math.round(window.visualViewport?.height ?? window.innerHeight);
+}
+
+function getBlockItemsPerRow(w: number) {
+  if (w >= breakpoints.wide) return 4;
+  if (w >= breakpoints.laptop) return 3;
+  if (w >= breakpoints.tablet) return 2;
+  return 1;
+}
+
+function getFriendItemsPerRow(w: number) {
+  if (w >= breakpoints.wide) return 5;
+  if (w >= breakpoints.desktop) return 4;
+  if (w >= breakpoints.laptop) return 3;
+  if (w >= breakpoints.phone) return 2;
+  return 1;
+}
+
+function getMaxProjectsPerLine(w: number) {
+  const horizontalPadding = w < breakpoints.tablet ? 32 : 48;
+  const minCardWidth = w < breakpoints.phone ? 136 : w < 540 ? 150 : 188;
+  return Math.max(1, Math.floor((w - horizontalPadding) / minCardWidth));
+}
+
+function getProjectsHeight(w: number) {
+  if (w < breakpoints.phone) return "108px";
+  if (w < breakpoints.tablet) return "118px";
+  if (w < 820) return "128px";
+  return "140px";
+}
+
+function getFontSizeM(w: number) {
+  if (w >= breakpoints.wide) return "20px";
+  if (w >= breakpoints.desktop) return "18px";
+  if (w >= breakpoints.laptop) return "16px";
+  if (w >= breakpoints.tablet) return "15px";
+  if (w >= breakpoints.phone) return "14px";
+  return "13px";
+}
+
+function getFontSizeS(w: number) {
+  if (w >= breakpoints.wide) return "16px";
+  if (w >= 650) return "15px";
+  if (w >= breakpoints.phone) return "13px";
+  return "12px";
+}
+
 /**
- * 依据当前窗口宽度计算响应式布局参数
- * A composable function that provides responsive layout values (ref) based on the current window width.
- *
- * @returns {Object} 会在响应式变化时自动更新的响应式布局参数对象。Reactive references automatically update when the window is resized.
- *
- * @example
- * ```typescript
- * const { width, blockItemsPerRow, maxProjectsPerBlock, fontSize } = useResponsive();
- * ```
- * ```vue
- * <My :param="fontsize"></My>
- * ```
+ * Provide shared width/height responsive refs for layout decisions.
  */
-// eslint-disable-next-line max-lines-per-function
 export function useResponsive() {
   const width = ref(window.innerWidth);
+  const height = ref(getViewportHeight());
 
   const blockItemsPerRow = ref(getBlockItemsPerRow(width.value));
   const maxProjectsPerLine = ref(getMaxProjectsPerLine(width.value));
-  const maxProjectsPerBlock = ref(Math.max(5, maxProjectsPerLine.value));
+  const maxProjectsPerBlock = ref(Math.max(4, maxProjectsPerLine.value));
   const fontSizeM = ref(getFontSizeM(width.value));
   const friendItemsPerRow = ref(getFriendItemsPerRow(width.value));
   const projectsHeight = ref(getProjectsHeight(width.value));
   const fontSizeS = ref(getFontSizeS(width.value));
 
-  // 首页等展示的盒子数量
-  // The number of boxes displayed on the homepage
-  function getBlockItemsPerRow(w: number) {
-    if (w >= breakpoints.wide) return 4;
-    if (w >= breakpoints.laptop) return 3;
-    if (w >= breakpoints.tablet) return 2;
-    return 1;
-  }
-
-  // 好友界面展示的盒子数量
-  // The number of boxes displayed on the friends.vue
-  function getFriendItemsPerRow(w: number) {
-    if (w >= breakpoints.wide) return 5;
-    if (w >= breakpoints.desktop) return 4;
-    if (w >= breakpoints.laptop) return 3;
-    return 2;
-  }
-
-  //  WorkList界面每行的作品盒子数量
-  // The number of work boxes per line in the WorkList page
-  function getMaxProjectsPerLine(w: number) {
-    if (w <= 800) return Math.round(w / 200);
-    return Math.round(w / 240);
-  }
-
-  function getProjectsHeight(w: number) {
-    if (w <= 800) return "120px";
-    return "140px";
-  }
-
-  // ExperimentSummary字体大小
-  // The font size of the ExperimentSummary
-  function getFontSizeM(w: number) {
-    if (w >= breakpoints.wide) return "20px";
-    if (w >= breakpoints.desktop) return "18px";
-    if (w >= breakpoints.laptop) return "16px";
-    if (w >= breakpoints.tablet) return "15px";
-    return "14px";
-  }
-
-  function getFontSizeS(w: number) {
-    if (w >= breakpoints.wide) return "16px";
-    if (w >= 650) return "15px";
-    return "13px";
-  }
+  const isPortrait = computed(() => height.value >= width.value);
+  const isCompact = computed(
+    () => width.value < breakpoints.tablet || height.value < 680,
+  );
+  const isUltraCompact = computed(
+    () => width.value < breakpoints.phone || height.value < 520,
+  );
+  const shouldCollapseTabs = computed(
+    () => width.value < 720 || height.value < 560,
+  );
 
   function handleResize() {
     width.value = window.innerWidth;
+    height.value = getViewportHeight();
     blockItemsPerRow.value = getBlockItemsPerRow(width.value);
     maxProjectsPerLine.value = getMaxProjectsPerLine(width.value);
-    maxProjectsPerBlock.value = Math.max(5, maxProjectsPerLine.value);
+    maxProjectsPerBlock.value = Math.max(4, maxProjectsPerLine.value);
     fontSizeM.value = getFontSizeM(width.value);
     fontSizeS.value = getFontSizeS(width.value);
     friendItemsPerRow.value = getFriendItemsPerRow(width.value);
@@ -92,14 +96,28 @@ export function useResponsive() {
   }
 
   onMounted(() => {
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("orientationchange", handleResize, {
+      passive: true,
+    });
+    window.visualViewport?.addEventListener("resize", handleResize, {
+      passive: true,
+    });
+    window.visualViewport?.addEventListener("scroll", handleResize, {
+      passive: true,
+    });
   });
+
   onUnmounted(() => {
     window.removeEventListener("resize", handleResize);
+    window.removeEventListener("orientationchange", handleResize);
+    window.visualViewport?.removeEventListener("resize", handleResize);
+    window.visualViewport?.removeEventListener("scroll", handleResize);
   });
 
   return {
     width,
+    height,
     blockItemsPerRow,
     friendItemsPerRow,
     maxProjectsPerLine,
@@ -108,5 +126,9 @@ export function useResponsive() {
     fontSizeS,
     breakpoints,
     projectsHeight,
+    isPortrait,
+    isCompact,
+    isUltraCompact,
+    shouldCollapseTabs,
   };
 }

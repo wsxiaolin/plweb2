@@ -24,18 +24,17 @@
         @msgClick="handleMsgClick"
       ></MessagesList>
     </div>
-    <div class="sendComment">
-      <n-input
-        v-model:value="comment"
-        style="text-align: left"
-        type="text"
-        :placeholder="t('comments.placeholder')"
-        show-count
+
+    <CommentComposer
+        v-model="comment"
+        class="comments-page__composer"
         :maxlength="300"
         :loading="isLoading"
-        @keyup.enter="handleEnter"
+        :disabled="!comment.trim()"
+        :placeholder="t('comments.placeholder')"
+        @submit="handleEnter"
       />
-    </div>
+
   </div>
 </template>
 
@@ -48,6 +47,7 @@ import parse from "@services/pltxt2htm/commonParser";
 import postComment from "@services/postComment.ts";
 import { useI18n } from "vue-i18n";
 import { NInput } from "naive-ui";
+import CommentComposer from "../components/utils/CommentComposer.vue";
 import type {
   Category,
   CommentResult,
