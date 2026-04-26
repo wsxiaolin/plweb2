@@ -254,7 +254,7 @@ export function removeToken<T>(obj: T): T {
           key === "Token" ||
           key === "AuthCode"
         ) {
-          // eslint-disable-next-line max-depth
+           
           const value = record[key];
           if (typeof value === "string") {
             record[key] = `${value.slice(0, 6)}******`;
