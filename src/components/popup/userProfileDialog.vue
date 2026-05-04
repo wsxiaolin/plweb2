@@ -165,7 +165,7 @@ async function unfollowUser() {
   position: absolute;
   left: 0;
   top: 0;
-  height: var(--app-height);
+  height: 100dvh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   padding: 12px;
@@ -177,7 +177,7 @@ async function unfollowUser() {
   top: 50%;
   transform: translate(-50%, -50%);
   width: min(320px, calc(100vw - 24px));
-  max-height: calc(var(--app-height) - 24px);
+  max-height: calc(100dvh - 24px);
   overflow: auto;
   padding: clamp(16px, 4vw, 20px);
   background-color: #fff;
