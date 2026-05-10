@@ -154,7 +154,7 @@ export function beforeRequest(path: string): IIntercetporResponse {
 
 export function afterRequest(response: Result): IIntercetporResponse {
   const re = response;
-  if (messageRef && re.Data && !noDestroyPath.some((p) => re.Data.$type === p))
+  if (messageRef && re.Data && !noDestroyPath.some((p) => (re.Data as any)?.$type === p))
     messageRef.destroy();
   // re.Status = 400;
   //  For testing purpose

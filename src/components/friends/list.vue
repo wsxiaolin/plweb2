@@ -55,7 +55,7 @@ async function handleLoad() {
   }
   const getRelationsRes = await getData("/Users/GetRelations", {
     UserID: userid,
-    DisplayType: type,
+    DisplayType: type ? Number(type) : 0,
     Skip: skip.value,
     Take: 24,
     Query: "",
@@ -90,10 +90,12 @@ async function handleLoad() {
   }
   // 在某些地方用的skip传入的是时间戳，但是这里找不到可能与时间戳有关的逻辑，skip为整数也能work
   // In some places, the 'skip' is a timestamp, but here there doesn't seem to be any logic related to the timestamp; 'skip' as an integer also works.
-  noMore.value = getRelationsRes.Data.$values.length < 24;
+  noMore.value = (getRelationsRes.Data?.$values?.length ?? 0) < 24;
   loading.value = false;
   skip.value += 24;
-  items.value = [...items.value, ...getRelationsRes.Data.$values];
+  if (getRelationsRes.Data?.$values) {
+    items.value = [...items.value, ...getRelationsRes.Data.$values];
+  }
 }
 
 window.$Logger.logPageView({

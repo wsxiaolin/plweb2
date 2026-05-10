@@ -46,7 +46,6 @@ import Header from "../components/utils/Header.vue";
 import parse from "@services/pltxt2htm/commonParser";
 import postComment from "@services/postComment.ts";
 import { useI18n } from "vue-i18n";
-import { NInput } from "naive-ui";
 import CommentComposer from "../components/utils/CommentComposer.vue";
 import type {
   Category,

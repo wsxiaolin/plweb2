@@ -78,6 +78,8 @@ export type CommentSpecial = keyof typeof CommentSpecials;
 export enum CommentSpecials {
   Reminder = "Reminder",
   Locked = "Locked",
+  // plweb2 edited
+  Anonymous = "Anonymous",
 }
 /** 正常查询为null */
 export type QuerySpecial = keyof typeof QuerySpecials;
@@ -460,7 +462,8 @@ export interface ContentTag {
   Identifier: string;
   ModeratorTips: string | null;
   Subject: Lang10;
-  Tips: string | null;
+  // plweb2 edited
+  Tips: any;
 }
 
 export interface ChargePrice {

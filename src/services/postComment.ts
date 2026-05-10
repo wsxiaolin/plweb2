@@ -25,6 +25,8 @@ export default async function postComment(
       ReplyID: replyID.value,
       Language: i18n.global.locale.value,
       Special: null,
+      ID: "",
+      UserID: "",
     });
 
     window.$Logger.logEvent({

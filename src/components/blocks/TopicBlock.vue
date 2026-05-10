@@ -11,7 +11,7 @@
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }"
-      @click="() => router.push(`/l/${block.TargetLink}`)"
+      @click="handleContainerClick"
     >
       <h2 class="title">{{ block.Subject }}</h2>
       <div class="box" @click.stop="">
@@ -29,7 +29,7 @@
       :style="{
         backgroundImage: `url(${getPath('/@base/assets/support.png')})`,
       }"
-      @click="activityProc"
+      @click="props.activityProc"
     >
       <h1 class="activity-text">{{ block.AuxiliaryText }}</h1>
     </div>
@@ -37,14 +37,25 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import type { TopicBlock as TopicBlockType } from "@services/../pl-serve-type-main/type/main";
 import Works from "../projects/brief.vue";
-import router from "../../router";
 import { getCoverUrl, getPath } from "@services/utils.ts";
-const { block, activityProc } = defineProps<{
+
+const router = useRouter();
+
+interface Props {
   block: TopicBlockType;
   activityProc?: (event: MouseEvent) => void;
-}>();
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  activityProc: () => {},
+});
+
+const handleContainerClick = () => {
+  router.push(`/l/${props.block.TargetLink}`);
+};
 </script>
 
 <style scoped>

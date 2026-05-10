@@ -254,6 +254,7 @@ let userData = ref<ProfileUserData>({
     SubscriptionUntil: "",
     IsBinded: true,
     Regions: [1],
+    Socials: {},
   },
   Statistic: {
     Cover: {
@@ -272,8 +273,11 @@ let userData = ref<ProfileUserData>({
 let expData = ref<Record<string, Summary[]>>({});
 
 async function fetchProfile() {
+  const userId = Array.isArray(route.params.id)
+    ? route.params.id[0] || ""
+    : route.params.id;
   const expRes = await getData(`/Contents/GetProfile`, {
-    ID: route.params.id,
+    ID: userId,
   });
   if (expRes.Status !== 200) {
     showAPiError(
@@ -285,7 +289,7 @@ async function fetchProfile() {
       }),
       fetchProfile,
     );
-    const _req = removeToken({ ID: route.params.id });
+    const _req = removeToken({ ID: userId });
     const _res = removeToken(expRes);
     window.$ErrorLogger.captureApiError(
       "POST",
@@ -300,7 +304,7 @@ async function fetchProfile() {
   if (!expRes.Data) return;
   expData.value = expRes.Data.Experiments;
   const userRes = await getData(`/Users/GetUser`, {
-    ID: route.params.id,
+    ID: userId,
   });
   if (userRes.Status !== 200 || !userRes.Data?.User || !userRes.Data.Statistic) {
     return;
@@ -309,7 +313,7 @@ async function fetchProfile() {
 
   // Check if viewing own profile
   const currentUser = storageManager.getObj("userInfo")?.value;
-  if (currentUser && currentUser.ID === route.params.id) {
+  if (currentUser && currentUser.ID === userId) {
     isOwnProfile.value = true;
   }
 

@@ -1,7 +1,7 @@
 <template>
-  <infiniteScroll :has-more="!noMore" :initial-items="items" @load="handleLoad">
-    <template #default="slotProps">
-      <div v-for="item in slotProps.items " :key="item.ID">
+  <infiniteScroll :hasMore="!noMore" :initialItems="items" @load="handleLoad">
+    <template #default="slotProps: { items: any[] }">
+      <div v-for="item in slotProps.items " :key="item.ID || item.id || Math.random()">
         <Notification :notification="item" />
         <n-divider style="margin: 0" />
       </div>
@@ -183,7 +183,6 @@ const handleLoad = async (noTemplates = true) => {
     }
 
     const messages = getMessagesResponse.Data.Messages;
-
     if (messages.length === 0) {
       noMore.value = true;
       showMessage("warning", t("ui.messages.noMore"), { duration: 2000 });
@@ -200,7 +199,6 @@ const handleLoad = async (noTemplates = true) => {
           msg_type: message.CategoryID,
         };
       }
-
       const lang = (
         [
           "Chinese",

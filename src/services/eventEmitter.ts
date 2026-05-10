@@ -27,7 +27,7 @@ class EventEmitter {
     const listeners = this.events[event];
     if (listeners) {
       listeners.forEach((listener) => {
-        listener(...args);
+        (listener as any)(...args);
       });
     }
   }

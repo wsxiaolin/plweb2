@@ -42,13 +42,11 @@
           </n-gi> -->
           <n-gi
             v-for="block in blocks.filter((i) => i.Summaries.length > 0)"
-            :key="block.Subject"
+            :key="getBlockKey(block)"
           >
             <div class="block">
               <TopicBlock
-                v-if="
-                  block.$type.startsWith('Quantum.Models.Contents.TopicBlock')
-                "
+                v-if="isTopicBlock(block)"
                 :block="block"
               />
               <Block
@@ -92,6 +90,14 @@ import type {
 const isLoading = ref(true);
 const blocks = ref<Array<ListBlock | TopicBlockType>>([]);
 const { t } = useI18n();
+
+function isTopicBlock(block: ListBlock | TopicBlockType): block is TopicBlockType {
+  return block.$type === "Quantum.Models.Contents.TopicBlock, Quantum Models";
+}
+
+function getBlockKey(block: ListBlock | TopicBlockType) {
+  return isTopicBlock(block) ? block.Subject : block.Header;
+}
 
 const _user = sm.getObj("userInfo")?.value;
 const user =

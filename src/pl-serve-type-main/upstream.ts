@@ -61,14 +61,11 @@ export var Upstream = class Upstream {
   }
   static init() {
     Object.entries(APIRouterCategories).forEach(({ 0: route, 1: method }) => {
-      // @ts-expect-error binding dynamic methods
       this.prototype[method] = this.bindRouter(`${route}/${method}`);
     });
     // @ts-expect-error setting HomePage
     this.prototype.HomePage = this.bindRouter("Users/");
-    // @ts-expect-error deleting methods
     delete this.bindRouter;
-    // @ts-expect-error deleting init method
     delete this.init;
     return this as unknown as {
       new (upstreamContext: UpstreamContext): Serve.Server & {

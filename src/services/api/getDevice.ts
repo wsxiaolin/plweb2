@@ -35,6 +35,6 @@ export function getDeviceInfo(): Device {
       Math.sqrt(screen.width ** 2 + screen.height ** 2) /
         (window.devicePixelRatio * 96),
     ),
-    Timezone: -new Date().getTimezoneOffset() / 60,
+    Timezone: (-new Date().getTimezoneOffset() / 60).toString(),
   };
 }

@@ -10,17 +10,14 @@
         <n-grid :x-gap="12" :y-gap="12" :cols="blockItemsPerRow">
           <n-gi
             v-for="block in blocks.filter((i) => i.Summaries.length > 0)"
-            :key="block.Subject"
+            :key="getBlockKey(block)"
           >
             <div class="block" style="height: 100%">
               <TopicBlock
-                v-if="
-                  block.$type.startsWith('Quantum.Models.Contents.TopicBlock')
-                "
+                v-if="isTopicBlock(block)"
                 :block="block"
                 :activityProc="
                   (event) =>
-                    //@ts-ignore no need to infer its type
                     getActivityProc(
                       block.AuxiliaryLink || 'internal://co-dev',
                     )?.(event) ?? undefined
@@ -63,6 +60,14 @@ import "../layout/startPage.css";
 
 const loading = ref(true);
 const blocks = ref<Array<ListBlock | TopicBlockType>>([]);
+
+function isTopicBlock(block: ListBlock | TopicBlockType): block is TopicBlockType {
+  return block.$type === "Quantum.Models.Contents.TopicBlock, Quantum Models";
+}
+
+function getBlockKey(block: ListBlock | TopicBlockType) {
+  return isTopicBlock(block) ? block.Subject : block.Header;
+}
 
 const goToWebCommunity = () => {
   window.$Logger.logEvent({

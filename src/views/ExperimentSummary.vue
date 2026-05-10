@@ -122,7 +122,7 @@
                             storageManager.getObj('userInfo')?.value?.ID ??
                             '',
                           authorId: data.User.ID,
-                          coauthorIds: data.Coauthors,
+                          coauthorIds: data.Coauthors.map((user) => user.ID),
                         },
                       )
                   "
@@ -195,6 +195,7 @@ import storageManager from "@storage/index.ts";
 import type {
   Category,
   CommentResult,
+  Summary,
 } from "@services/../pl-serve-type-main/type/main";
 
 const comment = ref("");
@@ -209,13 +210,10 @@ const returnImagePath = ref(
   getPath("/@base/assets/library/Navigation-Return.png"),
 );
 
-const data = ref({
+const data = ref<Summary>({
+  $type: "Quantum.Models.Contents.Summary, Quantum Models",
   Type: 0,
-  ParentID: null,
-  ParentName: null,
-  ParentCategory: null,
   ContentID: "642cf37a494746375aae306a",
-  Editor: null,
   Coauthors: [],
   Description: ["Loading..."],
   LocalizedDescription: null,
@@ -233,6 +231,13 @@ const data = ref({
   LocalizedSubject: null,
   Image: 0,
   ImageRegion: 0,
+  Version: 0,
+  Language: "Chinese",
+  UpdateDate: 0,
+  Visibility: 0,
+  SortingDate: 0,
+  CreationDate: 0,
+  Multilingual: false,
   User: {
     ID: "0",
     Nickname: "Loading...",
@@ -247,9 +252,9 @@ const data = ref({
 let coverUrl = ref(getPath("/@base/assets/messages/Experiment-Default.png"));
 let avatarUrl = ref(getUserUrl(data.value.User));
 async function fetchSummary() {
-  const res = await getData(`/Contents/GetSummary`, {
-    ContentID: route.params.id,
-    Category: route.params.category,
+  const res = await getData("/Contents/GetSummary", {
+    ContentID: route.params.id as string,
+    Category: route.params.category as string,
   });
   if (res.Status !== 200) {
     showAPiError(
@@ -262,8 +267,8 @@ async function fetchSummary() {
       fetchSummary,
     );
     const _req = removeToken({
-      ContentID: route.params.id,
-      Category: route.params.category,
+      ContentID: route.params.id as string,
+      Category: route.params.category as string,
     });
     const _res = removeToken(res);
     window.$ErrorLogger.captureApiError(
@@ -276,6 +281,7 @@ async function fetchSummary() {
     console.error(`/Contents/GetSummary returned ${res.Status}`, _res);
     return;
   }
+  if (!res.Data) return;
   data.value = res.Data;
   avatarUrl.value = getUserUrl(data.value.User);
   // Civitas-john always procrastinate on addressing the request to solve the anti-leeching issue.
@@ -360,9 +366,9 @@ function copySubject() {
             const target = e.target as HTMLInputElement | null;
             const file = target?.files?.[0];
             if (!file) return;
-            const summaryRes = await getData(`/Contents/GetSummary`, {
-              ContentID: route.params.id,
-              Category: route.params.category,
+            const summaryRes = await getData("/Contents/GetSummary", {
+              ContentID: route.params.id as string,
+              Category: route.params.category as string,
             });
             if (summaryRes.Status !== 200) {
               showAPiError(
@@ -373,9 +379,9 @@ function copySubject() {
                   message: summaryRes?.Message || "",
                 }),
                 async () => {
-                  return getData(`/Contents/GetSummary`, {
-                    ContentID: route.params.id,
-                    Category: route.params.category,
+                  return getData("/Contents/GetSummary", {
+                    ContentID: route.params.id as string,
+                    Category: route.params.category as string,
                   });
                 },
               );
@@ -397,10 +403,11 @@ function copySubject() {
               );
               return;
             }
+            if (!summaryRes.Data) return;
             const imageIndex = (summaryRes.Data.Image || 0) + 1;
-            const confirmRes = await getData(`/Contents/ConfirmExperiment`, {
-              Category: route.params.category,
-              SummaryID: route.params.id,
+            const confirmRes = await getData("/Contents/ConfirmExperiment", {
+              Category: route.params.category as string,
+              SummaryID: route.params.id as string,
               Image: imageIndex,
               Extension: ".png",
             });
@@ -413,9 +420,9 @@ function copySubject() {
                   message: confirmRes?.Message || "",
                 }),
                 async () => {
-                  return getData(`/Contents/ConfirmExperiment`, {
-                    Category: route.params.category,
-                    SummaryID: route.params.id,
+                  return getData("/Contents/ConfirmExperiment", {
+                    Category: route.params.category as string,
+                    SummaryID: route.params.id as string,
                     Image: imageIndex,
                     Extension: ".png",
                   });
@@ -441,7 +448,7 @@ function copySubject() {
               );
               return;
             }
-            const submitRes = await getData(`/Contents/SubmitExperiment`, {
+            const submitRes = await getData("/Contents/SubmitExperiment", {
               Request: {
                 FileSize: 0 - Math.abs(file.size),
                 Extension: ".jpg",
@@ -457,7 +464,7 @@ function copySubject() {
                   message: submitRes?.Message || "",
                 }),
                 async () => {
-                  return getData(`/Contents/SubmitExperiment`, {
+                  return getData("/Contents/SubmitExperiment", {
                     Request: {
                       FileSize: 0 - Math.abs(file.size),
                       Extension: ".jpg",
@@ -499,9 +506,9 @@ function copySubject() {
                 method: "POST",
                 body: form,
               });
-              const confirmRes2 = await getData(`/Contents/ConfirmExperiment`, {
-                Category: route.params.category,
-                SummaryID: route.params.id,
+              const confirmRes2 = await getData("/Contents/ConfirmExperiment", {
+                Category: route.params.category as string,
+                SummaryID: route.params.id as string,
                 Image: imageIndex,
                 Extension: ".png",
               });
@@ -514,9 +521,9 @@ function copySubject() {
                     message: confirmRes2?.Message || "",
                   }),
                   async () => {
-                    return getData(`/Contents/ConfirmExperiment`, {
-                      Category: route.params.category,
-                      SummaryID: route.params.id,
+                    return getData("/Contents/ConfirmExperiment", {
+                      Category: route.params.category as string,
+                      SummaryID: route.params.id as string,
                       Image: imageIndex,
                       Extension: ".png",
                     });
@@ -553,9 +560,9 @@ function copySubject() {
             });
             // refresh current cover (using existing utility function)
             setTimeout(async () => {
-              const refreshed = await getData(`/Contents/GetSummary`, {
-                ContentID: route.params.id,
-                Category: route.params.category,
+              const refreshed = await getData("/Contents/GetSummary", {
+                ContentID: route.params.id as string,
+                Category: route.params.category as string,
               });
               if (refreshed.Status !== 200) {
                 showAPiError(
@@ -566,9 +573,9 @@ function copySubject() {
                     message: refreshed?.Message || "",
                   }),
                   async () => {
-                    return getData(`/Contents/GetSummary`, {
-                      ContentID: route.params.id,
-                      Category: route.params.category,
+                    return getData("/Contents/GetSummary", {
+                      ContentID: route.params.id as string,
+                      Category: route.params.category as string,
                     });
                   },
                 );

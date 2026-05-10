@@ -26,24 +26,20 @@ function canCache(path: string): boolean {
   return CACHEABLE_PATHS.has(path);
 }
 
-function applyAfterRequest(data: Result) {
+function applyAfterRequest<T extends Result>(data: T): T {
   const afterRes = afterRequest(data);
   if (afterRes.continue === false) {
-    return afterRes.data;
+    return (afterRes.data as T) || data;
   }
   return data;
 }
 
-export function getData<Path extends ApiPath>(
-  path: Path,
-  body: APIParam<Path>,
-): Promise<APIResult<Path>>;
-export function getData(path: string, body?: unknown): Promise<unknown>;
-export async function getData(path: string, body?: unknown): Promise<unknown> {
+
+async function getDataImpl(path: string, body?: unknown): Promise<any> {
   const npath = normalizePath(String(path));
   const beforeRes = beforeRequest(npath);
   if (beforeRes.continue === false) {
-    return beforeRes.data;
+    return (beforeRes.data ?? {}) as Result;
   }
 
   const userInfo = sm.getObj("userAuthInfo");
@@ -92,7 +88,7 @@ export async function getData(path: string, body?: unknown): Promise<unknown> {
       showMessage("error", i18n.global.t("errors.networkError"), {
         duration: 5000,
       });
-      return undefined;
+      return { Status: response.status, Message: "Network Error", Data: null } as unknown as Result;
     }
 
     const data = (await response.json()) as Result;
@@ -124,6 +120,15 @@ export async function getData(path: string, body?: unknown): Promise<unknown> {
     throw error;
   }
 }
+
+export function getData<Path extends ApiPath>(
+  path: Path,
+  body: APIParam<Path>,
+): Promise<APIResult<Path>>;
+export function getData(path: string, body?: unknown): Promise<any> {
+  return getDataImpl(path, body);
+}
+
 
 export async function login(
   arg1: string | null,

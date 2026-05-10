@@ -31,3 +31,6 @@ dev-dist
 **/*.gz
 **/*.xz
 **/*.zstd
+
+# debugs
+*.http
