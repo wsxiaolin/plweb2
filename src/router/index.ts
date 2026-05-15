@@ -1,7 +1,7 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "Home",
@@ -62,6 +62,17 @@ const routes = [
     component: () => import("../views/Settings.vue"),
     meta: { keepAlive: false },
   },
+  // To maintain compatibility with old versions, we add some redirects for old paths
+  { path: "/black-hole", redirect: "/b" },
+  { path: "/notifications", redirect: "/n" },
+  { path: "/messages", redirect: "/m" },
+  { path: "/ExperimentSummary/:category/:id", redirect: "/p/:category/:id" },
+  { path: "/Comments/:category/:id/:name", redirect: "/c/:category/:id/:name" },
+  { path: "/profile/:id", redirect: "/u/:id" },
+  { path: "/friends", redirect: "/f" },
+  { path: "/list/:config", redirect: "/l/:config" },
+  { path: "/settings", redirect: "/s" },
+  { path: "/about", redirect: "/s" },
   {
     path: "/:catchAll(.*)",
     component: () => import("../views/NotFound.vue"),
