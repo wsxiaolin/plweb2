@@ -10,7 +10,8 @@ type localStorages =
   | "requestHistoryMap"
   | "apiResponseCache"
   | "userIDAndAvatarIDMap"
-  | "userAuthInfo";
+  | "userAuthInfo"
+  | "cookieConsent";
 
 interface StorageResult<T> {
   status: StorageStatus;

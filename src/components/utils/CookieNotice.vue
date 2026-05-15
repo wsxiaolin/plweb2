@@ -22,11 +22,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import storageManager from "@storage/index";
 
 const { t } = useI18n();
-const isVisible = ref(true);
+const isVisible = ref(storageManager.getObj("cookieConsent").status !== "success");
 
 function dismissNotice() {
+  storageManager.setObj("cookieConsent", true);
   isVisible.value = false;
 }
 </script>
