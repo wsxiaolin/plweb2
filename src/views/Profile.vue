@@ -5,7 +5,7 @@
       <div
         class="cover"
         :style="{
-          backgroundImage: `url(${coverUrl})`,
+          backgroundImage: `url(${coverUrl}), url(${defaultCoverUrl})`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -187,7 +187,7 @@ import Block from '../components/blocks/Block.vue'
 import postComment from '@services/postComment.ts'
 import BiLayout from '../layout/BiLayout.vue'
 import '../layout/BiLayout.css'
-import { copyText, getCoverUrl, getUserUrl } from '@services/utils.ts'
+import { copyText, getCoverUrl, getUserUrl, getPath } from '@services/utils.ts'
 import { useI18n } from 'vue-i18n'
 import showActionSheet from '@popup/actionSheet.ts'
 import { showMessage } from '@popup/naiveui'
@@ -208,8 +208,9 @@ let isOwnProfile = ref(false)
 const selectedTab = ref('Intro')
 const route = useRoute()
 const router = useRouter()
+const defaultCoverUrl = getPath('/@base/assets/messages/Experiment-Default.png')
 
-let coverUrl = ref('')
+let coverUrl = ref(defaultCoverUrl)
 
 type ProfileUserData = {
   User: UserInfo

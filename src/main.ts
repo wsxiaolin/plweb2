@@ -41,9 +41,15 @@ document.addEventListener(
   (event) => {
     const target = event.target
     if (!(target instanceof HTMLImageElement)) return
-    if (!target.currentSrc.includes('/users/avatars/')) return
 
-    const fallbackUrl = getPath('/@base/assets/user/default-avatar.png')
+    const currentSrc = target.currentSrc
+    const fallbackUrl = currentSrc.includes('/users/avatars/')
+      ? getPath('/@base/assets/user/default-avatar.png')
+      : currentSrc.includes('/experiments/images/')
+        ? getPath('/@base/assets/messages/Experiment-Default.png')
+        : ''
+
+    if (!fallbackUrl) return
     if (target.src !== fallbackUrl) {
       target.src = fallbackUrl
     }

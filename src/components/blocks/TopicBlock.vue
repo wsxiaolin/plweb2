@@ -5,7 +5,9 @@
     <div
       class="container"
       :style="{
-        backgroundImage: block.Summaries[0] ? `url(${getCoverUrl(block.Summaries[0]!)})` : 'none',
+        backgroundImage: block.Summaries[0]
+          ? `url(${getCoverUrl(block.Summaries[0]!)}), url(${defaultCoverUrl})`
+          : `url(${defaultCoverUrl})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }"
@@ -34,9 +36,10 @@
 import { useRouter } from 'vue-router'
 import type { TopicBlock as TopicBlockType } from '@services/../pl-serve-type-main/type/main'
 import Works from '../projects/brief.vue'
-import { getCoverUrl, getPath ,EncodeAPITargetLink} from '@services/utils.ts'
+import { getCoverUrl, getPath, EncodeAPITargetLink } from '@services/utils.ts'
 
 const router = useRouter()
+const defaultCoverUrl = getPath('/@base/assets/messages/Experiment-Default.png')
 
 interface Props {
   block: TopicBlockType
@@ -48,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const handleContainerClick = () => {
-  router.push((`/l/${EncodeAPITargetLink(props.block.TargetLink)}`))
+  router.push(`/l/${EncodeAPITargetLink(props.block.TargetLink)}`)
 }
 </script>
 

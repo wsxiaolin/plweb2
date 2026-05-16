@@ -5,7 +5,7 @@
         ref="nickname"
         class="cover"
         :style="{
-          backgroundImage: `url(${coverUrl})`,
+          backgroundImage: `url(${coverUrl}), url(${defaultCoverUrl})`,
         }"
       >
         <div>
@@ -172,6 +172,7 @@ const selectedTab = ref('Intro')
 const route = useRoute()
 const { t } = useI18n()
 const returnImagePath = ref(getPath('/@base/assets/library/Navigation-Return.png'))
+const defaultCoverUrl = getPath('/@base/assets/messages/Experiment-Default.png')
 
 const data = ref<Summary>({
   $type: 'Quantum.Models.Contents.Summary, Quantum Models',
@@ -212,7 +213,7 @@ const data = ref<Summary>({
   },
 })
 
-let coverUrl = ref(getPath('/@base/assets/messages/Experiment-Default.png'))
+let coverUrl = ref(defaultCoverUrl)
 let avatarUrl = ref(getUserUrl(data.value.User))
 let avatarLoaded = ref(false)
 async function fetchSummary() {
