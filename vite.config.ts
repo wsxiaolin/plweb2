@@ -1,10 +1,25 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+import { execSync } from 'child_process'
+import { readFileSync } from 'fs'
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'))
+
+let buildHash = 'unknown'
+try {
+  buildHash = execSync('git rev-parse --short HEAD').toString().trim()
+} catch {
+  // not a git repository or git not available
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+    __BUILD_HASH__: JSON.stringify(buildHash),
+  },
   plugins: [
     vue(),
     VitePWA({

@@ -53,7 +53,7 @@
       </div>
 
       <div class="settings-footer">
-        <span class="version-info">v{{ sysConfig.version }}</span>
+        <span class="version-info">v{{ sysConfig.version }} ({{ sysConfig.buildHash }})</span>
       </div>
     </div>
   </div>

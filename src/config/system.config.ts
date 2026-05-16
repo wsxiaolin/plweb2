@@ -1,5 +1,6 @@
 const sysConfig = {
-  version: '1.0.0',
+  version: __APP_VERSION__,
+  buildHash: __BUILD_HASH__,
   contributorsMain: [
     {
       ghid: 'wsxaiolin',

@@ -7,6 +7,9 @@ declare global {
     $Logger: Logger
     $ErrorLogger: ErrorLogger
   }
+
+  const __APP_VERSION__: string
+  const __BUILD_HASH__: string
 }
 
 export {}
