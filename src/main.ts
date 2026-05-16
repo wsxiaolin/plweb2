@@ -4,6 +4,7 @@ import router from './router/index'
 import i18n from '@i18n/index'
 import ErrorLogger from './services/errorLogger.ts'
 import { LogManager } from '@api/logWriter.ts'
+import { getPath } from '@services/utils'
 import type { DirectiveBinding } from 'vue'
 import 'highlight.js/styles/github.css'
 
@@ -11,20 +12,7 @@ const app = createApp(App)
 app.use(router)
 app.use(i18n)
 
-// mobile/embedded browser viewport-vh fix:
-// set a CSS variable --vh to 1% of the innerHeight and update on resize.
-// Use this in CSS as: height: calc(var(--vh) * 100);
-// function setVh() {
-//   try {
-//     const vh = window.innerHeight * 0.01;
-//     document.documentElement.style.setProperty("--vh", `${vh}px`);
-//   } catch (e) {
-//     // ignore
-//   }
-// }
-// setVh();
 
-// Richtext Render
 app.directive('richText', {
   mounted(el, binding: DirectiveBinding<() => Promise<string>>) {
     el.innerHTML = 'rendering...'
@@ -42,3 +30,23 @@ app.directive('richText', {
 app.mount('#app')
 window.$ErrorLogger = new ErrorLogger(app)
 window.$Logger = LogManager
+
+// No-cors responses for cross-origin images: 
+// the browser wraps a 404 from the source site as opaque, 
+// and the service worker cannot see the actual status code.
+// The current code treats opaque as a successful response and caches it,
+// so broken avatars do not enter the default avatar branch.
+document.addEventListener(
+  'error',
+  (event) => {
+    const target = event.target
+    if (!(target instanceof HTMLImageElement)) return
+    if (!target.currentSrc.includes('/users/avatars/')) return
+
+    const fallbackUrl = getPath('/@base/assets/user/default-avatar.png')
+    if (target.src !== fallbackUrl) {
+      target.src = fallbackUrl
+    }
+  },
+  true,
+)
