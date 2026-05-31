@@ -296,19 +296,10 @@ async function fetchProfile() {
     isOwnProfile.value = true
   }
 
-  // Civitas-john always procrastinate on addressing the request to solve the anti-leeching issue.
-  // That's why the below occurs
-  // hmmm...When use in https://plweb.turtlesim.com,abti-leeching issue does not occur
-  // So does it really works? No one knows...
   const _url = userData.value.Statistic.Cover
     ? getCoverUrl(userData.value.Statistic.Cover)
     : getUserUrl(userRes.Data.User)
-  await fetch(_url, {
-    // We annot get the response with mode: "no-cors"
-    // But the browser will (缓存) cache the image anyway
-    referrerPolicy: 'no-referrer',
-    mode: 'no-cors',
-  })
+    
   coverUrl.value = _url
   window.$Logger.logPageView({
     pageLink: `/User/${route.params.id}/`,
