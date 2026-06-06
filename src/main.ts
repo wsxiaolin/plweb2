@@ -39,6 +39,10 @@ registerSW({
   },
 })
 
+navigator.serviceWorker?.addEventListener('controllerchange', () => {
+  window.location.reload()
+})
+
 const app = createApp(App)
 app.use(router)
 app.use(i18n)
