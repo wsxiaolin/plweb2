@@ -103,8 +103,12 @@ const routes: RouteRecordRaw[] = [
   },
 
   { path: '/settings', redirect: '/s' },
-  { path: '/about', redirect: '/s' },
-
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('../views/About.vue'),
+    meta: { keepAlive: true },
+  },
   {
     path: '/:catchAll(.*)',
     component: () => import('../views/NotFound.vue'),
