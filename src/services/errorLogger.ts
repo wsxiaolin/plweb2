@@ -48,6 +48,8 @@ class ErrorLogger {
   private sessionId: string
   private debugMode = true
   private maxJsonDepth = 4
+  private isDev = false
+  private logTextBuffer = ''
   // For deduplication and reducing notification spam
   private lastErrorSignature?: string
   private lastErrorTime = 0
@@ -56,12 +58,48 @@ class ErrorLogger {
 
   constructor(app: any) {
     this.sessionId = this.generateSessionId()
+    this.isDev = import.meta.env.DEV
     this.initDebugMode()
 
     // Always load logs from storage so they survive refreshes (sanitization performed on save)
     this.loadLogsFromStorage()
 
     this.setupGlobalHandlers(app)
+
+    if (this.isDev) {
+      this.setupDevAutoExport()
+    }
+  }
+
+  private setupDevAutoExport() {
+    window.addEventListener('beforeunload', () => {
+      if (this.logTextBuffer) {
+        this.flushLogTextBuffer()
+      }
+    })
+  }
+
+  private flushLogTextBuffer() {
+    if (!this.logTextBuffer) return
+    const blob = new Blob([this.logTextBuffer], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `dev_errors_${new Date().toISOString().slice(0, 10)}.txt`
+    a.click()
+    URL.revokeObjectURL(url)
+    this.logTextBuffer = ''
+  }
+
+  private appendToLogBuffer(log: ErrorLog) {
+    this.logTextBuffer += `[${new Date(log.timestamp).toISOString()}] ${log.type.toUpperCase()}\n`
+    this.logTextBuffer += `Message: ${log.message}\n`
+    if (log.url) this.logTextBuffer += `URL: ${log.url}\n`
+    if (log.stack) this.logTextBuffer += `Stack: ${log.stack}\n`
+    if (log.statusCode) this.logTextBuffer += `Status: ${log.statusCode}\n`
+    if (log.requestData) this.logTextBuffer += `Request: ${JSON.stringify(log.requestData)}\n`
+    if (log.responseData) this.logTextBuffer += `Response: ${JSON.stringify(log.responseData)}\n`
+    this.logTextBuffer += `${'='.repeat(50)}\n\n`
   }
 
   private initDebugMode() {
@@ -243,6 +281,10 @@ class ErrorLogger {
     if (this.logs.value.length >= this.maxLogs) this.logs.value.shift()
     this.logs.value.push(errorLog)
     this.saveLogsToStorage()
+
+    if (this.isDev) {
+      this.appendToLogBuffer(errorLog)
+    }
 
     if (isDuplicate) {
       this.lastErrorCount++
