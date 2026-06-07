@@ -109,7 +109,37 @@ function parseCopiedRouteTarget(input: string): { path: string; needLogin: boole
   const userTag = text.match(/<user=([a-f0-9]{24})>/i)
   if (userTag?.[1]) return { path: `/u/${userTag[1]}`, needLogin: true }
 
+  // Match direct /p/Discussion/ or /p/Experiment/ or /u/ paths
+  const directPath = text.match(/\/p\/(Discussion|Experiment)\/([a-f0-9]{24})/i)
+  if (directPath?.[1] && directPath[2]) {
+    return { path: `/p/${directPath[1]}/${directPath[2]}`, needLogin: false }
+  }
+
+  const directUser = text.match(/\/u\/([a-f0-9]{24})/i)
+  if (directUser?.[1]) return { path: `/u/${directUser[1]}`, needLogin: true }
+
   return null
+}
+
+let lastCheckedClipboard = ''
+
+async function navigateToTarget(target: { path: string; needLogin: boolean }) {
+  if (target.needLogin && !storageManager.getObj('userInfo').value?.User?.ID) {
+    showMessage('warning', 'Please login first', { duration: 2000 })
+    return false
+  }
+  try {
+    await router.push(target.path)
+    return true
+  } catch (error) {
+    window.$ErrorLogger?.captureError({
+      type: 'custom',
+      message: 'Failed to auto-open pasted link',
+      context: { targetPath: target.path, error },
+    })
+    showMessage('error', 'Failed to open link', { duration: 2500 })
+    return false
+  }
 }
 
 async function handlePasteAutoOpen(event: ClipboardEvent) {
@@ -122,21 +152,32 @@ async function handlePasteAutoOpen(event: ClipboardEvent) {
   const target = parseCopiedRouteTarget(pastedText)
   if (!target) return
 
-  if (target.needLogin && !storageManager.getObj('userInfo').value?.User?.ID) {
-    showMessage('warning', 'Please login first', { duration: 2000 })
-    return
-  }
+  await navigateToTarget(target)
+}
+
+async function checkClipboardForAutoOpen() {
+  const isEnabled = storageManager.getObj('userConfig').value?.autoOpenCopiedLink === 'on'
+  if (!isEnabled) return
+  if (!navigator.clipboard?.readText) return
 
   try {
-    await router.push(target.path)
-  } catch (error) {
-    window.$ErrorLogger?.captureError({
-      type: 'custom',
-      message: 'Failed to auto-open pasted link',
-      context: { pastedText, targetPath: target.path, error },
-    })
-    showMessage('error', 'Failed to open link', { duration: 2500 })
+    const text = await navigator.clipboard.readText()
+    if (!text || text === lastCheckedClipboard) return
+    lastCheckedClipboard = text
+
+    const target = parseCopiedRouteTarget(text)
+    if (!target) return
+
+    await navigateToTarget(target)
+  } catch {
+    // Permission denied or unavailable - expected if user denies the prompt
   }
 }
 
 document.addEventListener('paste', handlePasteAutoOpen)
+document.addEventListener('visibilitychange', () => {
+
+  if (document.visibilityState === 'visible') {
+    checkClipboardForAutoOpen()
+  }
+})

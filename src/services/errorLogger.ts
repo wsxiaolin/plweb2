@@ -309,10 +309,11 @@ class ErrorLogger {
 
     // Console output: be concise to avoid double noise (browser already prints native errors)
     const rawContext = { ...context }
-    console.groupCollapsed(
-      `%c[${context.type.toUpperCase()}] ${context.message}`,
-      'color: red; font-weight: bold',
-    )
+    // console.groupCollapsed(
+    //   `%c[${context.type.toUpperCase()}] ${context.message}`,
+    //   'color: red; font-weight: bold',
+    // )
+    console.info(context.message)
     if (rawContext.error) {
       // print the original Error object so it can be expanded when needed
       console.error('Error object:', rawContext.error)
