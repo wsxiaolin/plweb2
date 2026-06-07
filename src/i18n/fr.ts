@@ -42,6 +42,16 @@ export default {
   worklist: {
     title: "Liste d'œuvres",
     more: 'Plus »',
+    sortDefault: 'Nouveautés',
+    sortPopularity: 'Populaires',
+    sortRandom: 'Aléatoire',
+    categoryExperiment: 'Expérience',
+    categoryDiscussion: 'Discussion',
+    categoryModel: 'Modèle',
+    works: 'Œuvres',
+    specialFavorite: 'Favoris',
+    specialSupport: 'Soutenu',
+    specialStar: 'Starifié',
   },
   profile: {
     fans: 'C-Abonnés {count}',

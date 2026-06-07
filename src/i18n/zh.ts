@@ -40,6 +40,16 @@ export default {
   worklist: {
     title: '作品列表',
     more: '更多 »',
+    sortDefault: '最新',
+    sortPopularity: '热门',
+    sortRandom: '随机',
+    categoryExperiment: '实验',
+    categoryDiscussion: '讨论',
+    categoryModel: '模型',
+    works: '作品',
+    specialFavorite: '收藏',
+    specialSupport: '支持',
+    specialStar: '星标',
   },
   profile: {
     fans: 'C-粉丝 {count}', // Magic: to make sure it is rendered by Tag componemt

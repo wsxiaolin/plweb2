@@ -42,6 +42,16 @@ export default {
   worklist: {
     title: 'Werkliste',
     more: 'Mehr »',
+    sortDefault: 'Neueste',
+    sortPopularity: 'Beliebt',
+    sortRandom: 'Zufällig',
+    categoryExperiment: 'Experiment',
+    categoryDiscussion: 'Diskussion',
+    categoryModel: 'Modell',
+    works: 'Werke',
+    specialFavorite: 'Favoriten',
+    specialSupport: 'Unterstützt',
+    specialStar: 'Markierte',
   },
   profile: {
     fans: 'C-Follower {count}',

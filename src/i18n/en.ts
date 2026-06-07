@@ -40,8 +40,18 @@ export default {
     participate: 'co-development',
   },
   worklist: {
-    title: 'work list',
+    title: 'Work List',
     more: 'More »',
+    sortDefault: 'Latest',
+    sortPopularity: 'Popular',
+    sortRandom: 'Random',
+    categoryExperiment: 'Experiment',
+    categoryDiscussion: 'Discussion',
+    categoryModel: 'Model',
+    works: 'Works',
+    specialFavorite: 'Favorites',
+    specialSupport: 'Supported',
+    specialStar: 'Starred',
   },
   profile: {
     fans: 'C-followers {count}', // Magic: to make sure it is rendered by Tag componemt

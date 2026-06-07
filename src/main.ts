@@ -4,7 +4,7 @@ import router from './router/index'
 import i18n from '@i18n/index'
 import ErrorLogger from './services/errorLogger.ts'
 import { LogManager } from '@api/logWriter.ts'
-import { getPath } from '@services/utils'
+import { getPath, registerNetworkListener } from '@services/utils'
 import storageManager from '@storage/index'
 import { showMessage } from '@popup/naiveui'
 import type { DirectiveBinding } from 'vue'
@@ -180,3 +180,4 @@ document.addEventListener('visibilitychange', () => {
     checkClipboardForAutoOpen()
   }
 })
+registerNetworkListener()

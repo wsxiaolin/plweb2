@@ -42,6 +42,16 @@ export default {
   worklist: {
     title: '作品リスト',
     more: 'もっと見る »',
+    sortDefault: '最新',
+    sortPopularity: '人気',
+    sortRandom: 'ランダム',
+    categoryExperiment: '実験',
+    categoryDiscussion: '議論',
+    categoryModel: 'モデル',
+    works: '作品',
+    specialFavorite: 'お気に入り',
+    specialSupport: '支持',
+    specialStar: 'スター',
   },
   profile: {
     fans: 'C-フォロワー {count}',
