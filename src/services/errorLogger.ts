@@ -42,9 +42,9 @@ export interface ErrorLog extends ErrorContext {
 
 class ErrorLogger {
   private logs = ref<ErrorLog[]>([])
-  private maxLogs = 1000
+  private maxLogs = 100
   private breadcrumbs: Breadcrumb[] = []
-  private maxBreadcrumbs = 50
+  private maxBreadcrumbs = 20
   private sessionId: string
   private debugMode = true
   private maxJsonDepth = 4
@@ -65,31 +65,9 @@ class ErrorLogger {
     this.loadLogsFromStorage()
 
     this.setupGlobalHandlers(app)
-
-    if (this.isDev) {
-      this.setupDevAutoExport()
-    }
   }
 
-  private setupDevAutoExport() {
-    window.addEventListener('beforeunload', () => {
-      if (this.logTextBuffer) {
-        this.flushLogTextBuffer()
-      }
-    })
-  }
 
-  private flushLogTextBuffer() {
-    if (!this.logTextBuffer) return
-    const blob = new Blob([this.logTextBuffer], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `dev_errors_${new Date().toISOString().slice(0, 10)}.txt`
-    a.click()
-    URL.revokeObjectURL(url)
-    this.logTextBuffer = ''
-  }
 
   private appendToLogBuffer(log: ErrorLog) {
     this.logTextBuffer += `[${new Date(log.timestamp).toISOString()}] ${log.type.toUpperCase()}\n`
