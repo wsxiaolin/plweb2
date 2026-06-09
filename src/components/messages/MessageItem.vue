@@ -35,9 +35,8 @@ import showUserCard from '@popup/userProfileDialog.ts'
 import { getAvatarUrl } from '@services/getUserCurentAvatarByID'
 import storageManager from '@storage/index.ts'
 import { formatDate, getPath, getAnonymousAvatarByNickname } from '@services/utils'
-import { useI18n } from 'vue-i18n'
 import type { CommentResult } from '@services/../pl-serve-type-main/type/main'
-
+import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const props = defineProps<{

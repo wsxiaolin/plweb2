@@ -27,27 +27,6 @@ function ensureMermaidInitialized() {
   mermaidInitialized = true
 }
 
-function getMermaidSvgWidth(svg: SVGSVGElement) {
-  const maxWidth = svg.style.maxWidth.match(/^([0-9.]+)px$/)?.[1]
-  if (maxWidth) return Number(maxWidth)
-
-  const width = svg.getAttribute('width')?.match(/^([0-9.]+)(?:px)?$/)?.[1]
-  if (width) return Number(width)
-
-  const viewBox = svg.getAttribute('viewBox')?.trim().split(/\s+/)
-  return viewBox?.[2] ? Number(viewBox[2]) : undefined
-}
-
-function keepMermaidSvgIntrinsicWidth(wrapper: HTMLElement) {
-  const svg = wrapper.querySelector('svg')
-  if (!(svg instanceof SVGSVGElement)) return
-
-  const width = getMermaidSvgWidth(svg)
-  if (width && Number.isFinite(width)) {
-    svg.style.setProperty('width', `${width}px`)
-  }
-  svg.style.setProperty('max-width', 'none')
-}
 
 async function renderMermaidDiagrams(container: HTMLElement) {
   ensureMermaidInitialized()
@@ -55,22 +34,21 @@ async function renderMermaidDiagrams(container: HTMLElement) {
 
   await Promise.all(
     mermaidBlocks.map(async (block, index) => {
-      const source = block.textContent?.trim()
-      if (!source) return
+      const source = block.textContent?.trim().replace(/\u00a0/g, " ");
+      if (!source) return;
 
       const pre = block.closest('pre')
       if (!pre) return
 
       try {
-        const renderId = `mermaid-${Date.now()}-${index}`
-        const { svg } = await mermaid.render(renderId, source)
-        const wrapper = document.createElement('div')
-        wrapper.className = 'mermaid-diagram'
-        wrapper.innerHTML = svg
-        keepMermaidSvgIntrinsicWidth(wrapper)
-        pre.replaceWith(wrapper)
-      } catch {
-        console.warn('Mermaid render failed')
+        const renderId = `mermaid-${Date.now()}-${index}`;
+        const { svg } = await mermaid.render(renderId, source);
+        const wrapper = document.createElement("div");
+        wrapper.className = "mermaid-diagram";
+        wrapper.innerHTML = svg;
+        pre.replaceWith(wrapper);
+      } catch (e) {
+        console.warn("mermaid render failed:", e);
       }
     }),
   )
@@ -87,14 +65,11 @@ async function advancedParser(
   const wasmInstance = await getWasmInstance()
   const instanceAny: any = wasmInstance
   if (!instanceAny.__advanced_parser_fn) {
-    instanceAny.__advanced_parser_fn = wasmInstance.cwrap('fixedadv_parser', 'number', [
-      'string',
-      'string',
-      'string',
-      'string',
-      'string',
-      'string',
-    ])
+    instanceAny.__advanced_parser_fn = wasmInstance.cwrap(
+      "fixedadv_parser",
+      "number",
+      ["string", "string", "string", "string", "string", "string"],
+    );
   }
 
   const deallocate = await getDeallocator()
@@ -145,9 +120,11 @@ async function parse(source: string, context: ParseContext = {}) {
     await renderMermaidDiagrams(tempDiv)
   }
 
-  tempDiv.querySelectorAll('pre code:not(.language-mermaid)').forEach((block) => {
-    hljs.highlightElement(block as HTMLElement)
-  })
+  tempDiv
+    .querySelectorAll("pre code:not(.language-mermaid)")
+    .forEach((block) => {
+      hljs.highlightElement(block as HTMLElement);
+    });
 
   return tempDiv.innerHTML
 }

@@ -31,30 +31,35 @@ const baseUrl = import.meta.env.VITE_BASE_URL
 let coverImgSuffix = getCoverImgSuffix()
 let avatarImgSuffix = getAvatarImgSuffix()
 
-function getCoverImgSuffix () {
-  const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection
+function getCoverImgSuffix() {
+  const connection =
+    (navigator as any).connection ||
+    (navigator as any).mozConnection ||
+    (navigator as any).webkitConnection
   if (connection) {
-    if(connection.saveData){
+    if (connection.saveData) {
       return '!block'
     }
-    if(['2g','3g'].includes(connection.effectiveType)){
+    if (['2g', '3g'].includes(connection.effectiveType)) {
       return '!block'
     }
   }
   return ''
-
 }
 
-function getAvatarImgSuffix () {
-  const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection
+function getAvatarImgSuffix() {
+  const connection =
+    (navigator as any).connection ||
+    (navigator as any).mozConnection ||
+    (navigator as any).webkitConnection
   if (connection) {
-    if(connection.saveData){
+    if (connection.saveData) {
       return '!tiny.round'
     }
-    if(connection.effectiveType === '2g'){
+    if (connection.effectiveType === '2g') {
       return '!tiny.round'
     }
-    if(connection.effectiveType === '3g'){
+    if (connection.effectiveType === '3g') {
       return '!small.round'
     }
   }
@@ -62,8 +67,11 @@ function getAvatarImgSuffix () {
 }
 
 export function registerNetworkListener() {
-  const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection
-  if(connection){
+  const connection =
+    (navigator as any).connection ||
+    (navigator as any).mozConnection ||
+    (navigator as any).webkitConnection
+  if (connection) {
     connection.addEventListener('change', () => {
       coverImgSuffix = getCoverImgSuffix()
       avatarImgSuffix = getAvatarImgSuffix()
